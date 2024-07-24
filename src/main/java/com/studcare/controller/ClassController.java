@@ -1,6 +1,7 @@
 package com.studcare.controller;
 
 import com.studcare.model.HttpRequestData;
+import com.studcare.model.YearTermDTO;
 import com.studcare.service.ClassService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,6 +130,19 @@ public class ClassController {
 			return classService.getClassResults(className, requestBody);
 		} catch (Exception exception) {
 			log.error("ClassController.getClassResults()[GET] unexpected error occurred", exception);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PostMapping("/{className}/term/result")
+	public ResponseEntity<Object> calculateClassResults(
+			@PathVariable String className,
+			@RequestBody YearTermDTO yearTermDTO) {
+		try {
+			log.info("ClassController.calculateClassResults()[POST] process initiated for class name: {} and academic year: {}, term: {}", className, yearTermDTO.getAcademicYear(), yearTermDTO.getTerm());
+			return classService.calculateClassResults(className, yearTermDTO);
+		} catch (Exception exception) {
+			log.error("ClassController.calculateClassResults()[POST] unexpected error occurred", exception);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

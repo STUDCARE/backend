@@ -4,8 +4,6 @@ import com.studcare.adapter.MonthlyEvaluationResponseAdapter;
 import com.studcare.adapter.ResponseAdapter;
 import com.studcare.adapter.YearTermResultRequestAdapter;
 import com.studcare.constants.Status;
-import com.studcare.data.jpa.adaptor.MonthlyEvaluationAdapter;
-import com.studcare.data.jpa.adaptor.StudentAdapter;
 import com.studcare.data.jpa.adaptor.UserAdapter;
 import com.studcare.data.jpa.entity.MonthlyEvaluation;
 import com.studcare.data.jpa.entity.SchoolClass;
@@ -14,14 +12,13 @@ import com.studcare.data.jpa.entity.SubjectResult;
 import com.studcare.data.jpa.entity.TermResult;
 import com.studcare.data.jpa.entity.User;
 import com.studcare.data.jpa.repository.MonthlyEvaluationRepository;
-import com.studcare.data.jpa.repository.SchoolClassRepository;
 import com.studcare.data.jpa.repository.StudentRepository;
 import com.studcare.data.jpa.repository.SubjectResultRepository;
 import com.studcare.data.jpa.repository.TermResultRepository;
 import com.studcare.data.jpa.repository.UserRepository;
 import com.studcare.exception.StudCareDataException;
 import com.studcare.exception.StudCareValidationException;
-import com.studcare.model.ClassResultsDTO;
+import com.studcare.model.ClassTeacherNoteDTO;
 import com.studcare.model.HttpResponseData;
 import com.studcare.model.MonthlyEvaluationResponseDTO;
 import com.studcare.model.MonthlyEvaluationsDTO;
@@ -46,30 +43,24 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 
 @Slf4j @Service public class StudentService {
 
-	@Autowired private SchoolClassRepository schoolClassRepository;
 	@Autowired private StudentRepository studentRepository;
 
 	@Autowired private ResponseAdapter responseAdapter;
 	@Autowired private YearTermResultRequestAdapter yearTermResultRequestAdapter;
-	
 
 	@Autowired private TermResultRepository termResultRepository;
 
 	@Autowired private SubjectResultRepository subjectResultRepository;
 
-	@Autowired
-	private UserAdapter userAdapter;
-	@Autowired
-	private StudentAdapter studentAdapter;
-	@Autowired
-	private MonthlyEvaluationResponseAdapter monthlyEvaluationResponseAdapter;
-	@Autowired
-	private MonthlyEvaluationRepository monthlyEvaluationRepository;
-	@Autowired
-	private UserRepository userRepository;
+	@Autowired private UserAdapter userAdapter;
+	@Autowired private UserRepository userRepository;
+	@Autowired private MonthlyEvaluationResponseAdapter monthlyEvaluationResponseAdapter;
+	@Autowired private MonthlyEvaluationRepository monthlyEvaluationRepository;
+
 	public ResponseEntity<Object> getStudentResults(String studentEmail, String requestBody) {
 		YearTermDTO yearTermDTO = yearTermResultRequestAdapter.adapt(requestBody);
-		log.info("StudentService.getStudentResults() initiated for student ID: {}, academic year: {}, term: {}", studentEmail, yearTermDTO.getAcademicYear(), yearTermDTO.getTerm());
+		log.info("StudentService.getStudentResults() initiated for student ID: {}, academic year: {}, term: {}", studentEmail, yearTermDTO.getAcademicYear(),
+				yearTermDTO.getTerm());
 		ResponseEntity<Object> responseEntity;
 		HttpResponseData httpResponseData = new HttpResponseData();
 		try {
@@ -85,7 +76,8 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			termResultsDTO.setTermNumber(yearTermDTO.getTerm());
 
 			List<SubjectResultDTO> subjectResultDTOs = new ArrayList<>();
-			TermResult termResult = termResultRepository.findByStudentAndAcademicYearAndTermNumber(student, yearTermDTO.getAcademicYear(), yearTermDTO.getTerm()).orElse(null);
+			TermResult termResult = termResultRepository.findByStudentAndAcademicYearAndTermNumber(student, yearTermDTO.getAcademicYear(),
+					yearTermDTO.getTerm()).orElse(null);
 			if (termResult != null) {
 				List<SubjectResult> subjectResults = subjectResultRepository.findByTermResult(termResult);
 				for (SubjectResult subjectResult : subjectResults) {
@@ -95,6 +87,7 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 					subjectResultDTO.setMarks(subjectResult.getMarks());
 					subjectResultDTO.setGrade(subjectResult.getGrade());
 					subjectResultDTO.setTeacherNote(subjectResult.getTeacherNote());
+					subjectResultDTO.setTeacherName(subjectResult.getTeacher().getEmail());
 					subjectResultDTOs.add(subjectResultDTO);
 				}
 			}
@@ -102,6 +95,7 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			termResultsDTO.setSubjectResults(subjectResultDTOs);
 			yearResultsDTO.setTermResults(Collections.singletonList(termResultsDTO));
 			studentResultsDTO.setYearResults(Collections.singletonList(yearResultsDTO));
+			studentResultsDTO.setSchoolClass(student.getSchoolClass());
 
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
@@ -139,7 +133,8 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			yearResultsDTO.setAcademicYear(yearTermDTO.getAcademicYear());
 
 			List<TermResultsDTO> termResultsDTOs = new ArrayList<>();
-			List<TermResult> termResults = termResultRepository.findByStudentAndAcademicYear(student, yearTermDTO.getAcademicYear()).orElseThrow(() -> new StudCareDataException("results not found"));
+			List<TermResult> termResults = termResultRepository.findByStudentAndAcademicYear(student, yearTermDTO.getAcademicYear())
+					.orElseThrow(() -> new StudCareDataException("results not found"));
 			for (TermResult termResult : termResults) {
 				TermResultsDTO termResultsDTO = new TermResultsDTO();
 				termResultsDTO.setTermNumber(termResult.getTermNumber());
@@ -153,6 +148,7 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 					subjectResultDTO.setMarks(subjectResult.getMarks());
 					subjectResultDTO.setGrade(subjectResult.getGrade());
 					subjectResultDTO.setTeacherNote(subjectResult.getTeacherNote());
+					subjectResultDTO.setTeacherName(subjectResult.getTeacher().getEmail());
 					subjectResultDTOs.add(subjectResultDTO);
 				}
 
@@ -162,6 +158,7 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 
 			yearResultsDTO.setTermResults(termResultsDTOs);
 			studentResultsDTO.setYearResults(Collections.singletonList(yearResultsDTO));
+			studentResultsDTO.setSchoolClass(student.getSchoolClass());
 
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
@@ -193,13 +190,10 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			StudentResultsDTO studentResultsDTO = new StudentResultsDTO();
 			studentResultsDTO.setStudentId(student.getStudentId());
 			studentResultsDTO.setStudentName(student.getUser().getUsername());
-
 			List<YearResultsDTO> yearResultsDTOs = new ArrayList<>();
 			List<TermResult> termResults = termResultRepository.findByStudent(student).orElseThrow(() -> new StudCareDataException("results not found"));
 			for (TermResult termResult : termResults) {
-				YearResultsDTO yearResultsDTO = yearResultsDTOs.stream()
-						.filter(yr -> yr.getAcademicYear().equals(termResult.getAcademicYear()))
-						.findFirst()
+				YearResultsDTO yearResultsDTO = yearResultsDTOs.stream().filter(yr -> yr.getAcademicYear().equals(termResult.getAcademicYear())).findFirst()
 						.orElseGet(() -> {
 							YearResultsDTO newYearResultsDTO = new YearResultsDTO();
 							newYearResultsDTO.setAcademicYear(termResult.getAcademicYear());
@@ -207,10 +201,8 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 							yearResultsDTOs.add(newYearResultsDTO);
 							return newYearResultsDTO;
 						});
-
 				TermResultsDTO termResultsDTO = new TermResultsDTO();
 				termResultsDTO.setTermNumber(termResult.getTermNumber());
-
 				List<SubjectResultDTO> subjectResultDTOs = new ArrayList<>();
 				List<SubjectResult> subjectResults = subjectResultRepository.findByTermResult(termResult);
 				for (SubjectResult subjectResult : subjectResults) {
@@ -220,13 +212,13 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 					subjectResultDTO.setMarks(subjectResult.getMarks());
 					subjectResultDTO.setGrade(subjectResult.getGrade());
 					subjectResultDTO.setTeacherNote(subjectResult.getTeacherNote());
+					subjectResultDTO.setTeacherName(subjectResult.getTeacher().getEmail());
 					subjectResultDTOs.add(subjectResultDTO);
 				}
-
 				termResultsDTO.setSubjectResults(subjectResultDTOs);
 				yearResultsDTO.getTermResults().add(termResultsDTO);
+				studentResultsDTO.setSchoolClass(student.getSchoolClass());
 			}
-
 			studentResultsDTO.setYearResults(yearResultsDTOs);
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
@@ -249,25 +241,21 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		return responseEntity;
 	}
 
-
 	public ResponseEntity<Object> getMonthlyEvaluations(String studentId, MonthlyEvaluationsDTO requestDTO) {
 		log.info("StudentService.getMonthlyEvaluations() initiated for student ID: {}", studentId);
 		ResponseEntity<Object> responseEntity;
 		HttpResponseData httpResponseData = new HttpResponseData();
 		try {
-
-			Student student = studentRepository.findByUser_Email(studentId)
-					.orElseThrow(() -> new StudCareDataException("Student not found"));
+			Student student = studentRepository.findByUser_Email(studentId).orElseThrow(() -> new StudCareDataException("Student not found"));
 			User hostelMaster = studentRepository.findHostelMasterByStudentId(student.getStudentId())
 					.orElseThrow(() -> new StudCareDataException("Hostel Master not found"));
 			List<MonthlyEvaluation> evaluations = monthlyEvaluationRepository.findByStudentAndEvaluationMonthIn(student, requestDTO.getMonths());
 			UserDTO hostelMasterDTO = userAdapter.adapt(hostelMaster);
-			MonthlyEvaluationResponseDTO monthlyEvaluationResponseDTO = monthlyEvaluationResponseAdapter.adapt(evaluations, hostelMasterDTO);
+			MonthlyEvaluationResponseDTO monthlyEvaluationResponseDTO = monthlyEvaluationResponseAdapter.adapt(evaluations, hostelMasterDTO, student.getWard().getWardName());
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Evaluation details retrieved successfully");
 			responseDTO.setData(Collections.singletonList(monthlyEvaluationResponseDTO));
-
 			httpResponseData = responseAdapter.adapt(responseDTO);
 			responseEntity = createResponseEntity(httpResponseData);
 		} catch (StudCareDataException exception) {
@@ -281,6 +269,58 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			httpResponseData.setResponseBody(exception.getMessage());
 			responseEntity = createResponseEntity(httpResponseData);
 		}
+		return responseEntity;
+	}
+
+	public ResponseEntity<Object> addClassTeacherNote(ClassTeacherNoteDTO noteDTO) {
+		log.info("ClassService.addClassTeacherNote() initiated for student ID: {}", noteDTO.getStudent());
+		ResponseEntity<Object> responseEntity;
+		HttpResponseData httpResponseData = new HttpResponseData();
+
+		try {
+			Student student = studentRepository.findByUser_Email(noteDTO.getStudent())
+					.orElseThrow(() -> new StudCareValidationException("Student not found"));
+
+			User teacher = userRepository.findByEmail(noteDTO.getTeacher())
+					.orElseThrow(() -> new StudCareValidationException("Teacher not found"));
+
+			SchoolClass studentClass = student.getSchoolClass();
+			if (!studentClass.getClassTeacher().equals(teacher)) {
+				throw new StudCareValidationException("The provided teacher is not the class teacher for this student");
+			}
+
+			TermResult termResult = termResultRepository
+					.findByStudentAndAcademicYearAndTermNumber(student, noteDTO.getAcademicYear(), noteDTO.getTerm())
+					.orElseGet(() -> {
+						TermResult newTermResult = new TermResult();
+						newTermResult.setStudent(student);
+						newTermResult.setAcademicYear(noteDTO.getAcademicYear());
+						newTermResult.setTermNumber(noteDTO.getTerm());
+						return newTermResult;
+					});
+
+			termResult.setClassTeacherNote(noteDTO.getClassTeacherNote());
+
+			termResultRepository.save(termResult);
+
+			ResponseDTO responseDTO = new ResponseDTO();
+			responseDTO.setResponseCode(Status.SUCCESS);
+			responseDTO.setMessage("Class teacher note added successfully");
+			httpResponseData = responseAdapter.adapt(responseDTO);
+			responseEntity = createResponseEntity(httpResponseData);
+
+		} catch (StudCareValidationException exception) {
+			log.error("ClassService.addClassTeacherNote() validation error", exception);
+			httpResponseData.setHttpStatus(HttpStatus.BAD_REQUEST);
+			httpResponseData.setResponseBody(exception.getMessage());
+			responseEntity = createResponseEntity(httpResponseData);
+		} catch (Exception exception) {
+			log.error("ClassService.addClassTeacherNote() an error occurred", exception);
+			httpResponseData.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			httpResponseData.setResponseBody(exception.getMessage());
+			responseEntity = createResponseEntity(httpResponseData);
+		}
+
 		return responseEntity;
 	}
 }

@@ -1,5 +1,6 @@
 package com.studcare.controller;
 
+import com.studcare.model.ClassTeacherNoteDTO;
 import com.studcare.model.MonthlyEvaluationsDTO;
 import com.studcare.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,4 +72,14 @@ public class StudentController {
 		}
 	}
 
+	@PostMapping("/term/note")
+	public ResponseEntity<Object> addClassTeacherNote(@RequestBody ClassTeacherNoteDTO noteDTO) {
+		try {
+			log.info("StudentService.addClassTeacherNote()[POST] process initiated");
+			return studentService.addClassTeacherNote(noteDTO);
+		} catch (Exception exception) {
+			log.error("StudentService.addClassTeacherNote()[POST] unexpected error occurred", exception);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

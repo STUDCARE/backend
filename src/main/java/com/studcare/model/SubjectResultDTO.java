@@ -9,4 +9,5 @@ public class SubjectResultDTO {
 	private String marks;
 	private String grade;
 	private String teacherNote;
+	private String teacherName;
 }

@@ -6,7 +6,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,7 +42,9 @@ public class SubjectResult {
 
 	@Column(name = "TeacherNote")
 	private String teacherNote;
-
+	@ManyToOne
+	@JoinColumn(name = "TeacherID")
+	private User teacher;
 	@CreationTimestamp
 	private LocalDateTime createdTimestamp;
 

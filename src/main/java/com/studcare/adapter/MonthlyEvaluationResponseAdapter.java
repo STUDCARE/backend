@@ -15,7 +15,7 @@ import java.util.Map;
 @Component
 public class MonthlyEvaluationResponseAdapter {
 
-	public MonthlyEvaluationResponseDTO adapt(List<MonthlyEvaluation> evaluations, UserDTO hostelMasterDTO) {
+	public MonthlyEvaluationResponseDTO adapt(List<MonthlyEvaluation> evaluations, UserDTO hostelMasterDTO, String ward) {
 		MonthlyEvaluationResponseDTO responseDTO = new MonthlyEvaluationResponseDTO();
 		Map<String, MonthlyEvaluationData> evaluationMap = new HashMap<>();
 
@@ -31,6 +31,7 @@ public class MonthlyEvaluationResponseAdapter {
 
 		responseDTO.setEvaluations(evaluationMap);
 		responseDTO.setHostelMaster(hostelMasterDTO);
+		responseDTO.setWard(ward);
 		return responseDTO;
 	}
 }

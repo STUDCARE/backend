@@ -9,4 +9,5 @@ import java.util.Map;
 public class MonthlyEvaluationResponseDTO {
 	private Map<String, MonthlyEvaluationData> evaluations;
 	private UserDTO hostelMaster;
+	private String ward;
 }

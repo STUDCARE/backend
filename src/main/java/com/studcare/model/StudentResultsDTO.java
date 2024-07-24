@@ -1,5 +1,6 @@
 package com.studcare.model;
 
+import com.studcare.data.jpa.entity.SchoolClass;
 import lombok.Data;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public class StudentResultsDTO {
 	private List<SubjectResultDTO> subjectResults;
 	private List<TermResultsDTO> termResults;
 	private List<YearResultsDTO> yearResults;
+	private SchoolClass schoolClass;
 }

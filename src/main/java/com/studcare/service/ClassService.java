@@ -46,6 +46,7 @@ import com.studcare.model.HttpResponseData;
 import com.studcare.model.ResponseDTO;
 import com.studcare.model.StudentResultsDTO;
 import com.studcare.model.SubjectResultDTO;
+import com.studcare.model.TermResultDTO;
 import com.studcare.model.UserDTO;
 import com.studcare.model.YearTermDTO;
 import com.studcare.validator.ClassValidator;
@@ -506,5 +507,83 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		}
 		dto.setUserDTO(userAdapter.adapt(student.getUser()));
 		return dto;
+	}
+
+	@Transactional
+	public ResponseEntity<Object> calculateClassResults(String className, YearTermDTO yearTermDTO) {
+		log.info("ClassService.calculateClassResults() initiated for class name: {}, academic year: {}, term: {}", className, yearTermDTO.getAcademicYear(), yearTermDTO.getTerm());
+		ResponseEntity<Object> responseEntity;
+		HttpResponseData httpResponseData = new HttpResponseData();
+		try {
+			SchoolClass schoolClass = schoolClassRepository.findByClassName(className)
+					.orElseThrow(() -> new StudCareDataException("Class not found"));
+
+			List<Student> students = studentRepository.findBySchoolClass(schoolClass);
+			List<TermResultDTO> studentResults = new ArrayList<>();
+
+			for (Student student : students) {
+				TermResultDTO result = calculateStudentResult(student, yearTermDTO);
+				studentResults.add(result);
+			}
+
+			// Sort students by total marks in descending order
+			studentResults.sort((a, b) -> b.getTotalMarks().compareTo(a.getTotalMarks()));
+
+			// Assign class ranks
+			for (int i = 0; i < studentResults.size(); i++) {
+				TermResultDTO result = studentResults.get(i);
+				int rank = i + 1;
+				result.setClassRank(rank);
+				updateTermResultWithRank(result.getStudentId(), yearTermDTO, rank);
+			}
+
+			ResponseDTO responseDTO = new ResponseDTO();
+			responseDTO.setResponseCode(Status.SUCCESS);
+			responseDTO.setMessage("Class results calculated and ranks updated successfully");
+			responseDTO.setData(Collections.singletonList(studentResults));
+
+			httpResponseData = responseAdapter.adapt(responseDTO);
+			responseEntity = createResponseEntity(httpResponseData);
+		} catch (StudCareValidationException exception) {
+			log.error("ClassService.calculateClassResults() validation error", exception);
+			httpResponseData.setHttpStatus(HttpStatus.BAD_REQUEST);
+			httpResponseData.setResponseBody(exception.getMessage());
+			responseEntity = createResponseEntity(httpResponseData);
+		} catch (Exception exception) {
+			log.error("ClassService.calculateClassResults() an error occurred", exception);
+			httpResponseData.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			httpResponseData.setResponseBody(exception.getMessage());
+			responseEntity = createResponseEntity(httpResponseData);
+		}
+
+		return responseEntity;
+	}
+
+	private TermResultDTO calculateStudentResult(Student student, YearTermDTO yearTermDTO) {
+		TermResult termResult = termResultRepository.findByStudentAndAcademicYearAndTermNumber(student, yearTermDTO.getAcademicYear(), yearTermDTO.getTerm())
+				.orElseThrow(() -> new StudCareDataException("Term result not found for student"));
+
+		List<SubjectResult> subjectResults = subjectResultRepository.findByTermResult(termResult);
+
+		int totalMarks = 0;
+		for (SubjectResult subjectResult : subjectResults) {
+			totalMarks += Integer.parseInt(subjectResult.getMarks());
+		}
+
+		TermResultDTO result = new TermResultDTO();
+		result.setStudentId(student.getStudentId());
+		result.setStudentName(student.getUser().getEmail());
+		result.setTotalMarks(totalMarks);
+
+		return result;
+	}
+
+	private void updateTermResultWithRank(Long studentId, YearTermDTO yearTermDTO, int rank) {
+		Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudCareDataException("student not found "));
+		TermResult termResult = termResultRepository.findByStudentAndAcademicYearAndTermNumber(student, yearTermDTO.getAcademicYear(), yearTermDTO.getTerm())
+				.orElseThrow(() -> new StudCareDataException("Term result not found for student"));
+
+		termResult.setClassRank(String.valueOf(rank));
+		termResultRepository.save(termResult);
 	}
 }
