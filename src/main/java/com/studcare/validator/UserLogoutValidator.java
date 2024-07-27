@@ -13,8 +13,7 @@ public class UserLogoutValidator implements GenericThrowableValidator<LogoutRequ
 	@Override
 	public void validate(LogoutRequestDTO logoutRequestDTO) throws StudCareValidationException {
 		if (!validateUserDetails(logoutRequestDTO.getEmail())) {
-			throw new StudCareValidationException(
-					"UserDeletionValidator.validate() error : one or more mandatory user details are missing.");
+			throw new StudCareValidationException("UserDeletionValidator.validate() error : one or more mandatory user details are missing.");
 		}
 	}
 

@@ -21,15 +21,15 @@ public class UserInitializer implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Optional<User> existingUser = userRepository.findByEmail("example@example.com");
+		Optional<User> existingUser = userRepository.findByEmail("admin@gmail.com");
 		if (existingUser.isPresent()) {
 			return;
 		}
 		User user = new User();
-		user.setEmail("example@example.com");
-		user.setPassword(passwordEncoder.encode("example123"));
+		user.setEmail("admin@gmail.com");
+		user.setPassword(passwordEncoder.encode("123"));
 		user.setRole(UserRole.ADMINISTRATOR);
-		user.setUsername("example@example.com");
+		user.setUsername("Admin User");
 		user.setIsClassTeacher(false);
 		userRepository.save(user);
 		log.info("Admin user successfully created");

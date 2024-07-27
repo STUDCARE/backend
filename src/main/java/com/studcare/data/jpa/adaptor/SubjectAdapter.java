@@ -14,11 +14,9 @@ public class SubjectAdapter {
 		if (subject == null) {
 			return null;
 		}
-
 		SubjectDTO subjectDTO = new SubjectDTO();
 		subjectDTO.setSubjectId(subject.getSubjectID());
 		subjectDTO.setSubjectName(subject.getSubjectName());
-
 		return subjectDTO;
 	}
 
@@ -26,11 +24,9 @@ public class SubjectAdapter {
 		if (subjectDTO == null) {
 			return null;
 		}
-
 		Subject subject = new Subject();
 		subject.setSubjectID(subjectDTO.getSubjectId());
 		subject.setSubjectName(subjectDTO.getSubjectName());
-
 		return subject;
 	}
 
@@ -38,9 +34,6 @@ public class SubjectAdapter {
 		if (subjects == null) {
 			return null;
 		}
-
-		return subjects.stream()
-				.map(this::adapt)
-				.collect(Collectors.toList());
+		return subjects.stream().map(this::adapt).collect(Collectors.toList());
 	}
 }

@@ -15,9 +15,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class ResponseAdapter implements GenericRequestAdapter<ResponseDTO, HttpResponseData> {
-	@Autowired private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-	@Override public HttpResponseData adapt(ResponseDTO classResponseDTO) {
+	@Override
+	public HttpResponseData adapt(ResponseDTO classResponseDTO) {
 		HttpResponseData responseData = new HttpResponseData();
 		if (classResponseDTO.getResponseCode().equals(Status.SUCCESS)) {
 			responseData.setHttpStatus(HttpStatus.OK);
@@ -36,5 +38,4 @@ public class ResponseAdapter implements GenericRequestAdapter<ResponseDTO, HttpR
 			throw new StudCareRuntimeException("user class request to user object failed");
 		}
 	}
-
 }

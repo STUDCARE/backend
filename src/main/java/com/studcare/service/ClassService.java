@@ -7,13 +7,11 @@ import com.studcare.adapter.ResponseAdapter;
 import com.studcare.adapter.YearTermResultRequestAdapter;
 import com.studcare.constants.Status;
 import com.studcare.data.jpa.adaptor.SchoolClassAdapter;
-import com.studcare.data.jpa.adaptor.StudentAdapter;
 import com.studcare.data.jpa.adaptor.SubjectAdapter;
 import com.studcare.data.jpa.adaptor.UserAdapter;
 import com.studcare.data.jpa.adaptor.WardAdapter;
 import com.studcare.data.jpa.dto.SchoolClassDTO;
 import com.studcare.data.jpa.dto.StudentDTO;
-import com.studcare.data.jpa.dto.SubjectDTO;
 import com.studcare.data.jpa.dto.SubjectTeacherDTO;
 import com.studcare.data.jpa.entity.ClassSubjectAssignment;
 import com.studcare.data.jpa.entity.SchoolClass;
@@ -40,7 +38,6 @@ import com.studcare.model.AddSubjectsToClassRequestDTO;
 import com.studcare.model.ClassDetailsDTO;
 import com.studcare.model.ClassRequestDTO;
 import com.studcare.model.ClassResultsDTO;
-import com.studcare.model.ClassTeacherDetailsDTO;
 import com.studcare.model.HttpRequestData;
 import com.studcare.model.HttpResponseData;
 import com.studcare.model.ResponseDTO;
@@ -51,7 +48,6 @@ import com.studcare.model.UserDTO;
 import com.studcare.model.YearTermDTO;
 import com.studcare.validator.ClassValidator;
 import jakarta.transaction.Transactional;
-import jdk.jfr.Label;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -78,9 +74,7 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 	@Autowired private ResponseAdapter classResponseAdapter;
 	@Autowired @Lazy private SchoolClassAdapter schoolClassAdapter;
 	@Autowired private AddSubjectsToClassRequestAdapter addSubjectsToClassRequestAdapter;
-
 	@Autowired private ClassValidator classValidator;
-
 	@Autowired private SubjectAdapter subjectAdapter;
 	@Autowired private UserRepository userRepository;
 	@Autowired private SubjectRepository subjectRepository;
@@ -88,12 +82,9 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 	@Autowired private StudentSubjectEnrollmentRepository studentSubjectEnrollmentRepository;
 	@Autowired private UserAdapter userAdapter;
 	@Autowired private YearTermResultRequestAdapter yearTermResultRequestAdapter;
-
 	@Autowired private ResponseAdapter responseAdapter;
 	@Autowired private WardAdapter wardAdapter;
-
 	@Autowired private TermResultRepository termResultRepository;
-
 	@Autowired private SubjectResultRepository subjectResultRepository;
 	@Autowired private SubjectTeacherRepository subjectTeacherRepository;
 
@@ -106,7 +97,6 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		try {
 			ClassRequestDTO classRequestDTO = classRequestAdapter.adapt(httpRequestData);
 			classValidator.validate(classRequestDTO);
-
 			classResponseDTO = addClass(classRequestDTO);
 			httpResponseData = classResponseAdapter.adapt(classResponseDTO);
 			responseEntity = createResponseEntity(httpResponseData);
@@ -130,6 +120,7 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		return responseEntity;
 	}
 
+	@Transactional
 	private ResponseDTO addClass(ClassRequestDTO classRequestDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		User classTeacher = userRepository.findByEmail(classRequestDTO.getSchoolClassDTO().getClassTeacher().getEmail())
@@ -143,7 +134,6 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		UserDTO classTeacherDTO = userAdapter.adapt(classTeacher);
 		schoolClassDTO.setClassTeacher(classTeacherDTO);
 		SchoolClass schoolClass = schoolClassAdapter.adapt(schoolClassDTO);
-
 		if (schoolClassRepository.findByClassName(schoolClass.getClassName()).isPresent()) {
 			responseDTO.setResponseCode(Status.FAILURE);
 			responseDTO.setMessage("Class already exists with name: " + schoolClass.getClassName());
@@ -162,12 +152,12 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		return responseDTO;
 	}
 
+	@Transactional
 	public ResponseEntity<Object> addStudents(HttpRequestData httpRequestData) {
 		log.info("ClassService.addStudents() initiated");
 		ResponseEntity<Object> responseEntity;
 		ResponseDTO responseDTO;
 		HttpResponseData httpResponseData = new HttpResponseData();
-
 		try {
 			AddStudentsRequestDTO addStudentsRequestDTO = addStudentRequestAdapter.adapt(httpRequestData);
 			responseDTO = addStudentsToClass(addStudentsRequestDTO.getClassName(), addStudentsRequestDTO.getStudents().getStudentEmails());
@@ -190,10 +180,10 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			responseEntity = createResponseEntity(httpResponseData);
 			log.error("ClassService.addStudents() an error occurred while processing the request", exception);
 		}
-
 		return responseEntity;
 	}
 
+	@Transactional
 	private ResponseDTO addStudentsToClass(String className, List<String> studentEmails) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		Optional<SchoolClass> optionalSchoolClass = schoolClassRepository.findByClassName(className);
@@ -224,17 +214,16 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 						responseDTO.setMessage("Student not found");
 					}
 				}
-
 			} catch (Exception exception) {
 				throw new StudCareDataException("Failed to add students to the class and map to subjects");
 			}
 		} else {
 			responseDTO.setResponseCode(Status.FAILURE);
 		}
-
 		return responseDTO;
 	}
 
+	@Transactional
 	public ResponseEntity<Object> addSubjectsToClass(HttpRequestData httpRequestData) {
 		log.info("ClassService.addSubjectsToClass() initiated");
 		ResponseEntity<Object> responseEntity;
@@ -256,21 +245,17 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			responseEntity = createResponseEntity(httpResponseData);
 			log.error("ClassService.addSubjectsToClass() an error occurred", exception);
 		}
-
 		return responseEntity;
 	}
 
+	@Transactional
 	private ResponseDTO addSubjectsAndTeachersToClass(AddSubjectsToClassRequestDTO subjectTeachersRequest) {
-		SchoolClass schoolClass = schoolClassRepository.findByClassName(subjectTeachersRequest.getClassName())
-				.orElseThrow(() -> new StudCareValidationException("Class not found"));
-
+		SchoolClass schoolClass = schoolClassRepository.findByClassName(subjectTeachersRequest.getClassName()).orElseThrow(() -> new StudCareValidationException("Class not found"));
 		for (String subjectName : subjectTeachersRequest.getSubjects().getSubjects()) {
 			Subject subject = subjectRepository.findBySubjectName(subjectName).orElseThrow(() -> new StudCareDataException("Subject not found"));
-
 			if (classSubjectAssignmentRepository.existsBySchoolClassAndSubject(schoolClass, subject)) {
 				throw new StudCareValidationException("Subject already assigned to this class");
 			}
-
 			ClassSubjectAssignment assignment = new ClassSubjectAssignment();
 			ClassSubjectAssignment.ClassSubjectAssignmentKey key = new ClassSubjectAssignment.ClassSubjectAssignmentKey();
 			key.setClassID(schoolClass.getClassID());
@@ -280,13 +265,13 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			assignment.setSubject(subject);
 			classSubjectAssignmentRepository.save(assignment);
 		}
-
 		ResponseDTO responseDTO = new ResponseDTO();
 		responseDTO.setResponseCode(Status.SUCCESS);
 		responseDTO.setMessage("Subjects and teachers added to the class successfully");
 		return responseDTO;
 	}
 
+	@Transactional
 	public ResponseEntity<Object> getStudentsInClass(String className) {
 		log.info("ClassService.getStudentsInClass() initiated");
 		ResponseEntity<Object> responseEntity;
@@ -298,7 +283,6 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Students in class retrieved successfully");
 			responseDTO.setData(students);
-
 			httpResponseData = classResponseAdapter.adapt(responseDTO);
 			responseEntity = createResponseEntity(httpResponseData);
 			log.info("ClassService.getStudentsInClass() finished successfully");
@@ -320,7 +304,6 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		log.info("ClassService.getClassesForTeacherAndSubject() initiated for teacher ID: {} and subject ID: {}", teacherId, subjectId);
 		ResponseEntity<Object> responseEntity;
 		HttpResponseData httpResponseData = new HttpResponseData();
-
 		try {
 			User teacher = userRepository.findByEmail(teacherId).orElseThrow(() -> new StudCareDataException("Teacher not found"));
 			Subject subject = subjectRepository.findBySubjectName(subjectId).orElseThrow(() -> new StudCareDataException("Subject not found"));
@@ -331,9 +314,7 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			if (assignments.isEmpty()) {
 				throw new StudCareValidationException("Teacher Does not teach this subject to any class");
 			}
-			List<SchoolClassDTO> classDTOs = assignments.stream().map(assignment -> schoolClassAdapter.adapt(assignment.getSchoolClass()))
-					.collect(Collectors.toList());
-
+			List<SchoolClassDTO> classDTOs = assignments.stream().map(assignment -> schoolClassAdapter.adapt(assignment.getSchoolClass())).collect(Collectors.toList());
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Teachers for subject retrieved successfully");
@@ -351,11 +332,10 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			httpResponseData.setResponseBody(exception.getMessage());
 			responseEntity = createResponseEntity(httpResponseData);
 		}
-
 		return responseEntity;
-
 	}
 
+	@Transactional
 	public ResponseEntity<Object> getClassDetails(String className) {
 		log.info("ClassService.getClassDetails() initiated for class name: {}", className);
 		ResponseEntity<Object> responseEntity;
@@ -364,9 +344,7 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			SchoolClass schoolClass = schoolClassRepository.findByClassName(className).orElseThrow(() -> new StudCareDataException("Class not found"));
 			List<Student> students = studentRepository.findBySchoolClass(schoolClass);
 			List<ClassSubjectAssignment> assignments = classSubjectAssignmentRepository.findBySchoolClass(schoolClass);
-
-			Map<Subject, User> subjectTeacherMap = assignments.stream()
-					.collect(Collectors.toMap(ClassSubjectAssignment::getSubject, ClassSubjectAssignment::getTeacher));
+			Map<Subject, User> subjectTeacherMap = assignments.stream().collect(Collectors.toMap(ClassSubjectAssignment::getSubject, ClassSubjectAssignment::getTeacher));
 			ClassDetailsDTO classDetails = new ClassDetailsDTO();
 			classDetails.setClassId(schoolClass.getClassID());
 			classDetails.setClassName(schoolClass.getClassName());
@@ -375,12 +353,10 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			classDetails.setSubjectTeachers(subjectTeacherMap.entrySet().stream()
 					.map(entry -> new SubjectTeacherDTO(subjectAdapter.adapt(entry.getKey()), userAdapter.adapt(entry.getValue())))
 					.collect(Collectors.toList()));
-
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Class details retrieved successfully");
 			responseDTO.setData(Collections.singletonList(classDetails));
-
 			httpResponseData = responseAdapter.adapt(responseDTO);
 			responseEntity = createResponseEntity(httpResponseData);
 		} catch (StudCareValidationException exception) {
@@ -394,7 +370,6 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			httpResponseData.setResponseBody(exception.getMessage());
 			responseEntity = createResponseEntity(httpResponseData);
 		}
-
 		return responseEntity;
 	}
 
@@ -449,7 +424,6 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			httpResponseData.setResponseBody(exception.getMessage());
 			responseEntity = createResponseEntity(httpResponseData);
 		}
-
 		return responseEntity;
 	}
 
@@ -473,18 +447,16 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			responseEntity = createResponseEntity(httpResponseData);
 			log.error("ClassService.addTeacherToClassSubject() an error occurred", exception);
 		}
-
 		return responseEntity;
 	}
+
 	private ResponseDTO saveTeacherToClassSubject(String teacherEmail, String subjectName, String className) {
 		SchoolClass schoolClass = schoolClassRepository.findByClassName(className).orElseThrow(() -> new StudCareValidationException("Class not found"));
 		Subject subject = subjectRepository.findBySubjectName(subjectName).orElseThrow(() -> new StudCareDataException("Subject not found"));
 		User teacher = userRepository.findByEmail(teacherEmail).orElseThrow(() -> new StudCareDataException("Teacher not found"));
-
 		if (!subjectTeacherRepository.existsBySubjectAndTeacher(subject, teacher)) {
 			throw new StudCareValidationException("This Teacher does not teach this subject");
 		}
-
 		ClassSubjectAssignment assignment = classSubjectAssignmentRepository.findBySchoolClassAndSubject(schoolClass, subject).orElseThrow(() -> new StudCareDataException("Subject is not bean thought in this class"));
 		ClassSubjectAssignment.ClassSubjectAssignmentKey key = assignment.getId();
 		assignment.setId(key);
@@ -492,7 +464,6 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		assignment.setSubject(subject);
 		assignment.setTeacher(teacher);
 		classSubjectAssignmentRepository.save(assignment);
-
 		ResponseDTO responseDTO = new ResponseDTO();
 		responseDTO.setResponseCode(Status.SUCCESS);
 		responseDTO.setMessage("Teacher added to the class subject successfully");
@@ -515,20 +486,15 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		ResponseEntity<Object> responseEntity;
 		HttpResponseData httpResponseData = new HttpResponseData();
 		try {
-			SchoolClass schoolClass = schoolClassRepository.findByClassName(className)
-					.orElseThrow(() -> new StudCareDataException("Class not found"));
-
+			SchoolClass schoolClass = schoolClassRepository.findByClassName(className).orElseThrow(() -> new StudCareDataException("Class not found"));
 			List<Student> students = studentRepository.findBySchoolClass(schoolClass);
 			List<TermResultDTO> studentResults = new ArrayList<>();
-
 			for (Student student : students) {
 				TermResultDTO result = calculateStudentResult(student, yearTermDTO);
 				studentResults.add(result);
 			}
-
 			// Sort students by total marks in descending order
 			studentResults.sort((a, b) -> b.getTotalMarks().compareTo(a.getTotalMarks()));
-
 			// Assign class ranks
 			for (int i = 0; i < studentResults.size(); i++) {
 				TermResultDTO result = studentResults.get(i);
@@ -536,12 +502,10 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 				result.setClassRank(rank);
 				updateTermResultWithRank(result.getStudentId(), yearTermDTO, rank);
 			}
-
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Class results calculated and ranks updated successfully");
 			responseDTO.setData(Collections.singletonList(studentResults));
-
 			httpResponseData = responseAdapter.adapt(responseDTO);
 			responseEntity = createResponseEntity(httpResponseData);
 		} catch (StudCareValidationException exception) {
@@ -555,26 +519,21 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			httpResponseData.setResponseBody(exception.getMessage());
 			responseEntity = createResponseEntity(httpResponseData);
 		}
-
 		return responseEntity;
 	}
 
 	private TermResultDTO calculateStudentResult(Student student, YearTermDTO yearTermDTO) {
 		TermResult termResult = termResultRepository.findByStudentAndAcademicYearAndTermNumber(student, yearTermDTO.getAcademicYear(), yearTermDTO.getTerm())
-				.orElseThrow(() -> new StudCareDataException("Term result not found for student"));
-
+				.orElseThrow(() -> new StudCareDataException("Term result not found"));
 		List<SubjectResult> subjectResults = subjectResultRepository.findByTermResult(termResult);
-
 		int totalMarks = 0;
 		for (SubjectResult subjectResult : subjectResults) {
 			totalMarks += Integer.parseInt(subjectResult.getMarks());
 		}
-
 		TermResultDTO result = new TermResultDTO();
 		result.setStudentId(student.getStudentId());
 		result.setStudentName(student.getUser().getEmail());
 		result.setTotalMarks(totalMarks);
-
 		return result;
 	}
 
@@ -582,7 +541,6 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudCareDataException("student not found "));
 		TermResult termResult = termResultRepository.findByStudentAndAcademicYearAndTermNumber(student, yearTermDTO.getAcademicYear(), yearTermDTO.getTerm())
 				.orElseThrow(() -> new StudCareDataException("Term result not found for student"));
-
 		termResult.setClassRank(String.valueOf(rank));
 		termResultRepository.save(termResult);
 	}

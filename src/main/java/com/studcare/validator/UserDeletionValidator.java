@@ -13,8 +13,7 @@ public class UserDeletionValidator implements GenericThrowableValidator<UserDele
 	@Override
 	public void validate(UserDeletionRequestDTO userDeletionRequestDTO) throws StudCareValidationException {
 		if (!validateUserDetails(userDeletionRequestDTO.getUserEmail())) {
-			throw new StudCareValidationException(
-					"UserDeletionValidator.validate() error : one or more mandatory user details are missing.");
+			throw new StudCareValidationException("UserDeletionValidator.validate() error : one or more mandatory user details are missing.");
 		}
 	}
 

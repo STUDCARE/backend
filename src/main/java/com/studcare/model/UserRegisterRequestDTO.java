@@ -1,6 +1,5 @@
 package com.studcare.model;
 
-import com.studcare.data.jpa.entity.UserRole;
 import lombok.Data;
 
 import java.util.Map;

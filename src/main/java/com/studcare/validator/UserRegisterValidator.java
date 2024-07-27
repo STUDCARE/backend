@@ -13,8 +13,7 @@ public class UserRegisterValidator implements GenericThrowableValidator<UserRegi
 	@Override
 	public void validate(UserRegisterRequestDTO userRegisterRequestDTO) throws StudCareValidationException {
 		if (!validateUserDetails(userRegisterRequestDTO.getUserDTO())) {
-			throw new StudCareValidationException(
-					"UserRegisterValidator.validate() error : one or more mandatory user details are missing.");
+			throw new StudCareValidationException("UserRegisterValidator.validate() error : one or more mandatory user details are missing.");
 		}
 	}
 

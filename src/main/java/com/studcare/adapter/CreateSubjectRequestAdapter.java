@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class CreateSubjectRequestAdapter implements GenericRequestAdapter<HttpRequestData, CreateSubjectRequestDTO> {
-
 	@Autowired
 	private ObjectMapper objectMapper;
 

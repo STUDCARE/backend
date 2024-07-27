@@ -1,6 +1,5 @@
 package com.studcare.data.jpa.repository;
 
-import com.studcare.data.jpa.entity.Student;
 import com.studcare.data.jpa.entity.User;
 import com.studcare.data.jpa.entity.Ward;
 import org.springframework.data.jpa.repository.JpaRepository;

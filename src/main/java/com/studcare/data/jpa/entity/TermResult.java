@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = "subjectResults")
 @Table(name = "TERM_RESULT")
 public class TermResult {
 	@Id

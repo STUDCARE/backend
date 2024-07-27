@@ -13,8 +13,7 @@ public class ClassValidator implements GenericThrowableValidator<ClassRequestDTO
 	@Override
 	public void validate(ClassRequestDTO classRequestDTO) throws StudCareValidationException {
 		if (!validateUserDetails(classRequestDTO.getSchoolClassDTO())) {
-			throw new StudCareValidationException(
-					"ClassValidator.validate() error : one or more mandatory user details are missing.");
+			throw new StudCareValidationException("ClassValidator.validate() error : one or more mandatory user details are missing.");
 		}
 	}
 

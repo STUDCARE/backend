@@ -1,23 +1,20 @@
 package com.studcare.service;
 
-import com.studcare.adapter.CreateSubjectRequestAdapter;
 import com.studcare.adapter.AddTeacherToSubjectRequestAdapter;
+import com.studcare.adapter.CreateSubjectRequestAdapter;
 import com.studcare.adapter.ResponseAdapter;
 import com.studcare.constants.Status;
-import com.studcare.data.jpa.dto.SchoolClassDTO;
-import com.studcare.data.jpa.entity.ClassSubjectAssignment;
 import com.studcare.data.jpa.entity.Subject;
-import com.studcare.data.jpa.entity.User;
 import com.studcare.data.jpa.entity.SubjectTeacher;
+import com.studcare.data.jpa.entity.User;
 import com.studcare.data.jpa.entity.UserRole;
 import com.studcare.data.jpa.repository.SubjectRepository;
-import com.studcare.data.jpa.repository.UserRepository;
 import com.studcare.data.jpa.repository.SubjectTeacherRepository;
+import com.studcare.data.jpa.repository.UserRepository;
 import com.studcare.exception.StudCareDataException;
-import com.studcare.exception.StudCareRuntimeException;
 import com.studcare.exception.StudCareValidationException;
-import com.studcare.model.CreateSubjectRequestDTO;
 import com.studcare.model.AddTeacherToSubjectRequestDTO;
+import com.studcare.model.CreateSubjectRequestDTO;
 import com.studcare.model.HttpRequestData;
 import com.studcare.model.HttpResponseData;
 import com.studcare.model.ResponseDTO;
@@ -35,19 +32,14 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 @Slf4j
 @Service
 public class SubjectService {
-
 	@Autowired
 	private SubjectRepository subjectRepository;
-
 	@Autowired
 	private UserRepository userRepository;
-
 	@Autowired
 	private SubjectTeacherRepository subjectTeacherRepository;
-
 	@Autowired
 	private CreateSubjectRequestAdapter createSubjectRequestAdapter;
-
 	@Autowired
 	private AddTeacherToSubjectRequestAdapter addTeacherToSubjectRequestAdapter;
 	@Autowired
@@ -119,10 +111,8 @@ public class SubjectService {
 	}
 
 	private ResponseDTO addTeacherToSubject(AddTeacherToSubjectRequestDTO addTeacherToSubjectRequestDTO) {
-		Subject subject = subjectRepository.findBySubjectName(addTeacherToSubjectRequestDTO.getSubject())
-				.orElseThrow(() -> new StudCareValidationException("Subject not found"));
-		User teacher = userRepository.findByEmail(addTeacherToSubjectRequestDTO.getTeacher())
-				.orElseThrow(() -> new StudCareValidationException("Teacher not found"));
+		Subject subject = subjectRepository.findBySubjectName(addTeacherToSubjectRequestDTO.getSubject()).orElseThrow(() -> new StudCareValidationException("Subject not found"));
+		User teacher = userRepository.findByEmail(addTeacherToSubjectRequestDTO.getTeacher()).orElseThrow(() -> new StudCareValidationException("Teacher not found"));
 		if (!teacher.getRole().equals(UserRole.TEACHER)) {
 			throw new StudCareValidationException("User is not a teacher");
 		}
@@ -146,7 +136,6 @@ public class SubjectService {
 		responseDTO.setMessage("Teacher assigned to subject successfully");
 		return responseDTO;
 	}
-
 
 	public ResponseEntity<Object> getAllSubjects() {
 		log.info("SubjectService.getAllSubjects() initiated");
@@ -175,8 +164,7 @@ public class SubjectService {
 		ResponseEntity<Object> responseEntity;
 		HttpResponseData httpResponseData = new HttpResponseData();
 		try {
-			User teacher = userRepository.findByEmail(teacherEmail)
-					.orElseThrow(() -> new StudCareValidationException("Teacher not found"));
+			User teacher = userRepository.findByEmail(teacherEmail).orElseThrow(() -> new StudCareValidationException("Teacher not found"));
 			List<Subject> subjects = subjectTeacherRepository.findByTeacher(teacher)
 					.stream()
 					.map(SubjectTeacher::getSubject)
@@ -207,8 +195,7 @@ public class SubjectService {
 		ResponseEntity<Object> responseEntity;
 		HttpResponseData httpResponseData = new HttpResponseData();
 		try {
-			Subject subject = subjectRepository.findBySubjectName(subjectName)
-					.orElseThrow(() -> new StudCareValidationException("Subject not found"));
+			Subject subject = subjectRepository.findBySubjectName(subjectName).orElseThrow(() -> new StudCareValidationException("Subject not found"));
 			List<User> teachers = subjectTeacherRepository.findBySubject(subject)
 					.stream()
 					.map(SubjectTeacher::getTeacher)
@@ -233,6 +220,4 @@ public class SubjectService {
 		}
 		return responseEntity;
 	}
-
-
 }

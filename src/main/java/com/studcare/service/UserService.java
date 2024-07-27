@@ -1,4 +1,4 @@
-package com.studcare.data.jpa.service;
+package com.studcare.service;
 
 import com.studcare.adapter.GetUsersAdapter;
 import com.studcare.adapter.ResponseAdapter;
@@ -22,7 +22,6 @@ import com.studcare.model.LogoutResponseDTO;
 import com.studcare.model.ResponseDTO;
 import com.studcare.model.UserDTO;
 import com.studcare.model.UserDeletionResponseDTO;
-import com.studcare.model.UserProfileRequestDTO;
 import com.studcare.model.UserProfileResponseDTO;
 import com.studcare.model.UserRegisterResponseDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -84,7 +83,6 @@ public class UserService {
 
 	public UserDeletionResponseDTO delete(String email) throws StudCareValidationException {
 		UserDeletionResponseDTO deleteResponseDTO = new UserDeletionResponseDTO();
-
 		Optional<User> userOptional = userRepository.findByEmail(email);
 		if (userOptional.isEmpty()) {
 			deleteResponseDTO.setResponseCode(Status.FAILURE);
@@ -122,18 +120,15 @@ public class UserService {
 	public LogoutResponseDTO logout(LogoutRequestDTO logoutRequestDTO) throws StudCareValidationException {
 		LogoutResponseDTO logoutResponseDTO = new LogoutResponseDTO();
 		Optional<User> userOptional = userRepository.findByEmail(logoutRequestDTO.getEmail());
-
 		if (userOptional.isEmpty()) {
 			logoutResponseDTO.setResponseCode(Status.FAILURE);
 			logoutResponseDTO.setMessage("No user found with email: " + logoutRequestDTO.getEmail());
 			throw new StudCareValidationException("No user found with email: " + logoutRequestDTO.getEmail());
 		} else {
 			User user = userOptional.get();
-
 			try {
 				String tokenToInvalidate = getTokenFromRequest(logoutRequestDTO.getHeaders());
 				boolean isTokenInvalid = jwtService.invalidateToken(user, tokenToInvalidate);
-
 				if (isTokenInvalid) {
 					logoutResponseDTO.setResponseCode(Status.SUCCESS);
 					logoutResponseDTO.setMessage("User logged out successfully");

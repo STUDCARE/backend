@@ -1,7 +1,6 @@
 package com.studcare.data.security.controller;
 
 import com.studcare.data.security.auth.dto.AuthenticationRequest;
-import com.studcare.data.security.auth.dto.RegisterRequest;
 import com.studcare.data.security.auth.dto.AuthenticationResponse;
 import com.studcare.data.security.auth.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 	@Autowired
 	private AuthenticationService authenticationService;
-
 
 	@PostMapping("/login")
 	public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {

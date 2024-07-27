@@ -1,7 +1,6 @@
 package com.studcare.data.jpa.repository;
 
 import com.studcare.data.jpa.entity.Subject;
-import com.studcare.data.jpa.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

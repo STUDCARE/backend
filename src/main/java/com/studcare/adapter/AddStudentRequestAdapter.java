@@ -16,7 +16,8 @@ import org.springframework.stereotype.Component;
 public class AddStudentRequestAdapter implements GenericRequestAdapter<HttpRequestData, AddStudentsRequestDTO> {
 	@Autowired private ObjectMapper objectMapper;
 
-	@Override public AddStudentsRequestDTO adapt(HttpRequestData httpRequestData) {
+	@Override
+	public AddStudentsRequestDTO adapt(HttpRequestData httpRequestData) {
 		AddStudentsRequestDTO addStudentsRequestDTO = new AddStudentsRequestDTO();
 		addStudentsRequestDTO.setHeaders(httpRequestData.getHeaders());
 		addStudentsRequestDTO.setQueryParams(httpRequestData.getQueryParams());

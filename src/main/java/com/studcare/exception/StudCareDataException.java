@@ -4,5 +4,4 @@ public class StudCareDataException extends RuntimeException {
 	public StudCareDataException(String message) {
 		super(message);
 	}
-
 }

@@ -1,6 +1,5 @@
 package com.studcare.model;
 
-import com.studcare.data.jpa.entity.Ward;
 import lombok.Data;
 
 @Data

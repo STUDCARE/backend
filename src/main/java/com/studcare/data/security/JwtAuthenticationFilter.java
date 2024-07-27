@@ -45,11 +45,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 			} else {
-				// Token is invalid, return an appropriate response or handle it as needed
 				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
 				return;
 			}
 		}
-		filterChain.doFilter(request, response); // Call the next filter in the chain
+		filterChain.doFilter(request, response);
 	}
 }

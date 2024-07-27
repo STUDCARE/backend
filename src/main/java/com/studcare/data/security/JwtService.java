@@ -22,10 +22,12 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
+	private final Set<String> blacklistedTokens = ConcurrentHashMap.newKeySet();
 	@Autowired
 	private UserDetailsService userDetailsService;
 	@Value("${studcare.secret.key}")
 	private String secretKey;
+
 	public String extractUsername(String token) {
 		return extractClaims(token, Claims::getSubject);
 	}
@@ -39,26 +41,14 @@ public class JwtService {
 		return generateToken(new HashMap<>(), userDetails);
 	}
 
-	public String generateToken(
-			Map<String, Object> extraClaims,
-			UserDetails userDetails
-	) {
-
-		return Jwts
-				.builder()
-				.setClaims(extraClaims)
-				.setSubject(userDetails.getUsername())
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24 *60))
-				.signWith(getSignInKey(), SignatureAlgorithm.HS256)
-				.compact();
+	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+		return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24 * 60)).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
 	}
 
 	public boolean isTokenValid(String token, UserDetails userDetails) {
 		final String username = extractUsername(token);
-		return (username.equals(userDetails.getUsername()))
-				&& !isTokenExpired(token)
-				&& !blacklistedTokens.contains(token);  // Add this check
+		return (username.equals(userDetails.getUsername())) && !isTokenExpired(token) && !blacklistedTokens.contains(token);
 	}
 
 	private boolean isTokenExpired(String token) {
@@ -70,19 +60,13 @@ public class JwtService {
 	}
 
 	private Claims extractAllClaims(String token) {
-		return Jwts.parserBuilder()
-				.setSigningKey(getSignInKey())
-				.build()
-				.parseClaimsJws(token)
-				.getBody();
+		return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
 	}
 
 	private Key getSignInKey() {
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
-
-	private final Set<String> blacklistedTokens = ConcurrentHashMap.newKeySet();
 
 	public boolean invalidateToken(User user, String token) {
 		String username = user.getEmail();

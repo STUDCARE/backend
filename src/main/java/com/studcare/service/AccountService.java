@@ -8,7 +8,6 @@ import com.studcare.adapter.UserProfileRequestAdapter;
 import com.studcare.adapter.UserProfileResponseAdapter;
 import com.studcare.adapter.UserRegisterRequestAdapter;
 import com.studcare.adapter.UserRegisterResponseAdapter;
-import com.studcare.data.jpa.service.UserService;
 import com.studcare.exception.StudCareRuntimeException;
 import com.studcare.exception.StudCareValidationException;
 import com.studcare.model.HttpRequestData;
@@ -25,15 +24,12 @@ import com.studcare.validator.UserDeletionValidator;
 import com.studcare.validator.UserLogoutValidator;
 import com.studcare.validator.UserProfileValidator;
 import com.studcare.validator.UserRegisterValidator;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-
-import java.util.Map;
 
 import static com.studcare.util.CommonUtils.createResponseEntity;
 
@@ -67,6 +63,7 @@ public class AccountService {
 	@Autowired
 	private UserService userService;
 
+	@Transactional
 	public ResponseEntity<Object> createUser(HttpRequestData httpRequestData) {
 		log.info("AccountService.adaptCreateUser() initiated");
 		ResponseEntity<Object> responseEntity;
@@ -98,6 +95,7 @@ public class AccountService {
 		return responseEntity;
 	}
 
+	@Transactional
 	public ResponseEntity<Object> deleteUser(HttpRequestData httpRequestData) {
 		log.info("AccountService.deleteUser() initiated by user {}", httpRequestData.getReference());
 		ResponseEntity<Object> responseEntity;
@@ -129,6 +127,7 @@ public class AccountService {
 		return responseEntity;
 	}
 
+	@Transactional
 	public ResponseEntity<Object> viewUserProfile(HttpRequestData httpRequestData) {
 		log.info("AccountService.viewUserProfile() initiated");
 		ResponseEntity<Object> responseEntity;
@@ -160,6 +159,7 @@ public class AccountService {
 		return responseEntity;
 	}
 
+	@Transactional
 	public ResponseEntity<Object> userLogout(HttpRequestData httpRequestData) {
 		log.info("AccountService.userLogout() initiated");
 		ResponseEntity<Object> responseEntity;

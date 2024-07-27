@@ -16,7 +16,6 @@ public class CommonUtils {
 	private CommonUtils() {
 		// to hide public constructor
 	}
-
 	public static boolean isEmpty(String... parameters) {
 		for (String parameter : parameters) {
 			if (ObjectUtils.isEmpty(parameter)) {
@@ -63,7 +62,6 @@ public class CommonUtils {
 		}
 		return object;
 	}
-
 
 	public static ResponseEntity<Object> createResponseEntity(HttpResponseData responseData) {
 		HttpHeaders responseHeaders = new HttpHeaders();

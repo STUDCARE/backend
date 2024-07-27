@@ -1,13 +1,10 @@
 package com.studcare.service;
 
-import com.studcare.adapter.MonthlyEvaluationResponseAdapter;
-import com.studcare.data.jpa.adaptor.MonthlyEvaluationAdapter;
 import com.studcare.adapter.ResponseAdapter;
 import com.studcare.constants.Status;
+import com.studcare.data.jpa.adaptor.MonthlyEvaluationAdapter;
 import com.studcare.data.jpa.adaptor.StudentAdapter;
-import com.studcare.data.jpa.adaptor.UserAdapter;
 import com.studcare.data.jpa.adaptor.WardAdapter;
-import com.studcare.data.jpa.dto.HostelMasterDTO;
 import com.studcare.data.jpa.entity.MonthlyEvaluation;
 import com.studcare.data.jpa.entity.Student;
 import com.studcare.data.jpa.entity.User;
@@ -20,10 +17,7 @@ import com.studcare.exception.StudCareDataException;
 import com.studcare.exception.StudCareValidationException;
 import com.studcare.model.HttpResponseData;
 import com.studcare.model.MonthlyEvaluationRequestDTO;
-import com.studcare.model.MonthlyEvaluationResponseDTO;
-import com.studcare.model.MonthlyEvaluationsDTO;
 import com.studcare.model.ResponseDTO;
-import com.studcare.model.UserDTO;
 import com.studcare.model.WardDetailsDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +48,7 @@ public class HostelMasterService {
 	@Autowired
 	private WardAdapter wardAdapter;
 	@Autowired
-	private UserAdapter userAdapter;
-	@Autowired
 	private StudentAdapter studentAdapter;
-	@Autowired
-	private MonthlyEvaluationResponseAdapter monthlyEvaluationResponseAdapter;
 	@Autowired
 	private MonthlyEvaluationAdapter monthlyEvaluationAdapter;
 
@@ -66,25 +56,17 @@ public class HostelMasterService {
 		log.info("HostelMasterService.getWardDetails() initiated for hostel master ID: {}", hostelMasterEmail);
 		ResponseEntity<Object> responseEntity;
 		HttpResponseData httpResponseData = new HttpResponseData();
-
 		try {
-			User hostelMaster = userRepository.findByEmail(hostelMasterEmail)
-					.orElseThrow(() -> new StudCareValidationException("Hostel Master not found"));
-
-			Ward ward = wardRepository.findByHostelMaster(hostelMaster)
-					.orElseThrow(() -> new StudCareValidationException("Ward not found for this Hostel Master"));
-
+			User hostelMaster = userRepository.findByEmail(hostelMasterEmail).orElseThrow(() -> new StudCareValidationException("Hostel Master not found"));
+			Ward ward = wardRepository.findByHostelMaster(hostelMaster).orElseThrow(() -> new StudCareValidationException("Ward not found for this Hostel Master"));
 			List<Student> students = studentRepository.findByWard(ward);
-
 			WardDetailsDTO wardDetailsDTO = new WardDetailsDTO();
 			wardDetailsDTO.setWardDTO(wardAdapter.adapt(ward));
 			wardDetailsDTO.setStudents(students.stream().map(studentAdapter::adapt).collect(Collectors.toList()));
-
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Ward details retrieved successfully");
 			responseDTO.setData(Collections.singletonList(wardDetailsDTO));
-
 			httpResponseData = responseAdapter.adapt(responseDTO);
 			responseEntity = createResponseEntity(httpResponseData);
 		} catch (StudCareValidationException exception) {
@@ -98,7 +80,6 @@ public class HostelMasterService {
 			httpResponseData.setResponseBody(exception.getMessage());
 			responseEntity = createResponseEntity(httpResponseData);
 		}
-
 		return responseEntity;
 	}
 
@@ -106,17 +87,10 @@ public class HostelMasterService {
 		log.info("HostelMasterService.addMonthlyEvaluation() initiated for hostel master ID: {} and student ID: {}", hostelMasterEmail, studentId);
 		ResponseEntity<Object> responseEntity;
 		HttpResponseData httpResponseData = new HttpResponseData();
-
 		try {
-			User hostelMaster = userRepository.findByEmail(hostelMasterEmail)
-					.orElseThrow(() -> new StudCareDataException("Hostel Master not found"));
-
-			Student student = studentRepository.findByUser_Email(studentId)
-					.orElseThrow(() -> new StudCareDataException("Student not found"));
-
-			Ward ward = wardRepository.findByWardName(evaluationRequestDTO.getWardName())
-					.orElseThrow(() -> new StudCareDataException("Ward not found"));
-
+			User hostelMaster = userRepository.findByEmail(hostelMasterEmail).orElseThrow(() -> new StudCareDataException("Hostel Master not found"));
+			Student student = studentRepository.findByUser_Email(studentId).orElseThrow(() -> new StudCareDataException("Student not found"));
+			Ward ward = wardRepository.findByWardName(evaluationRequestDTO.getWardName()).orElseThrow(() -> new StudCareDataException("Ward not found"));
 			if (!ward.getHostelMaster().equals(hostelMaster)) {
 				throw new StudCareValidationException("Hostel Master is not assigned to this ward");
 			}
@@ -126,18 +100,14 @@ public class HostelMasterService {
 			else if (!student.getWard().equals(ward)) {
 				throw new StudCareValidationException("Student is not assigned to this ward");
 			}
-
 			MonthlyEvaluation monthlyEvaluation = monthlyEvaluationAdapter.adapt(evaluationRequestDTO);
 			monthlyEvaluation.setStudent(student);
 			monthlyEvaluation.setHostelMasterId(hostelMaster);
 			monthlyEvaluation.setWardId(ward);
-
 			monthlyEvaluationRepository.save(monthlyEvaluation);
-
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Monthly evaluation added successfully");
-
 			httpResponseData = responseAdapter.adapt(responseDTO);
 			responseEntity = createResponseEntity(httpResponseData);
 		} catch (StudCareValidationException exception) {
@@ -151,8 +121,6 @@ public class HostelMasterService {
 			httpResponseData.setResponseBody(exception.getMessage());
 			responseEntity = createResponseEntity(httpResponseData);
 		}
-
 		return responseEntity;
 	}
-
 }

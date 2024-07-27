@@ -1,4 +1,4 @@
-package com.studcare.data.security.controller;
+package com.studcare.controller;
 
 import com.studcare.model.HttpRequestData;
 import com.studcare.service.AccountService;

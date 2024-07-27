@@ -10,27 +10,27 @@ import com.studcare.template.GenericRequestAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 @Slf4j
-	@Component
-	public class ClassRequestAdapter implements GenericRequestAdapter<HttpRequestData, ClassRequestDTO> {
-		@Autowired
-		private ObjectMapper objectMapper;
+@Component
+public class ClassRequestAdapter implements GenericRequestAdapter<HttpRequestData, ClassRequestDTO> {
+	@Autowired
+	private ObjectMapper objectMapper;
 
-		@Override
-		public ClassRequestDTO adapt(HttpRequestData httpRequestData) {
-			ClassRequestDTO userRegisterRequestDTO = new ClassRequestDTO();
-			userRegisterRequestDTO.setHeaders(httpRequestData.getHeaders());
-			userRegisterRequestDTO.setQueryParams(httpRequestData.getQueryParams());
-			userRegisterRequestDTO.setSchoolClassDTO(mapUserData(httpRequestData.getRequestBody()));
-			return userRegisterRequestDTO;
-		}
+	@Override public ClassRequestDTO adapt(HttpRequestData httpRequestData) {
+		ClassRequestDTO userRegisterRequestDTO = new ClassRequestDTO();
+		userRegisterRequestDTO.setHeaders(httpRequestData.getHeaders());
+		userRegisterRequestDTO.setQueryParams(httpRequestData.getQueryParams());
+		userRegisterRequestDTO.setSchoolClassDTO(mapUserData(httpRequestData.getRequestBody()));
+		return userRegisterRequestDTO;
+	}
 
-		private SchoolClassDTO mapUserData(String requestBody) {
-			try {
-				return objectMapper.readValue(requestBody, SchoolClassDTO.class);
-			} catch (JsonProcessingException exception) {
-				log.error("ClassRequestAdapter.mapUserData(): map user register request to user object failed", exception);
-				throw new StudCareRuntimeException("user register request to user object failed");
-			}
+	private SchoolClassDTO mapUserData(String requestBody) {
+		try {
+			return objectMapper.readValue(requestBody, SchoolClassDTO.class);
+		} catch (JsonProcessingException exception) {
+			log.error("ClassRequestAdapter.mapUserData(): map user register request to user object failed", exception);
+			throw new StudCareRuntimeException("user register request to user object failed");
 		}
+	}
 }

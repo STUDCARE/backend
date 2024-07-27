@@ -8,6 +8,7 @@ import com.studcare.model.MonthlyEvaluationResponseDTO;
 import com.studcare.model.UserDTO;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ public class MonthlyEvaluationResponseAdapter {
 
 	public MonthlyEvaluationResponseDTO adapt(List<MonthlyEvaluation> evaluations, UserDTO hostelMasterDTO, String ward) {
 		MonthlyEvaluationResponseDTO responseDTO = new MonthlyEvaluationResponseDTO();
-		Map<String, MonthlyEvaluationData> evaluationMap = new HashMap<>();
+		Map<String, List<MonthlyEvaluationData>> evaluationMap = new HashMap<>();
 
 		for (MonthlyEvaluation evaluation : evaluations) {
 			MonthlyEvaluationData data = new MonthlyEvaluationData();
@@ -25,10 +26,9 @@ public class MonthlyEvaluationResponseAdapter {
 			data.setExtraNote(evaluation.getExtraNote());
 			data.setExtracurricularActivities(evaluation.getExtracurricularActivities());
 			data.setHealthData(evaluation.getHealthData());
-
-			evaluationMap.put(evaluation.getEvaluationMonth(), data);
+			String month = evaluation.getEvaluationMonth();
+			evaluationMap.computeIfAbsent(month, k -> new ArrayList<>()).add(data);
 		}
-
 		responseDTO.setEvaluations(evaluationMap);
 		responseDTO.setHostelMaster(hostelMasterDTO);
 		responseDTO.setWard(ward);

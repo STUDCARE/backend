@@ -3,7 +3,6 @@ package com.studcare.adapter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studcare.exception.StudCareRuntimeException;
-import com.studcare.model.AllUsersDTO;
 import com.studcare.model.AllUsersRequestDTO;
 import com.studcare.model.HttpRequestData;
 import lombok.extern.slf4j.Slf4j;

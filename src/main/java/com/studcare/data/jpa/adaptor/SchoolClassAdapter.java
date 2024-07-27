@@ -1,20 +1,13 @@
 package com.studcare.data.jpa.adaptor;
 
 import com.studcare.data.jpa.dto.SchoolClassDTO;
-import com.studcare.data.jpa.dto.StudentDTO;
 import com.studcare.data.jpa.entity.SchoolClass;
-import com.studcare.data.jpa.entity.Student;
 import com.studcare.data.jpa.entity.User;
 import com.studcare.model.UserDTO;
-import jdk.jfr.Label;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class SchoolClassAdapter {
@@ -28,7 +21,6 @@ public class SchoolClassAdapter {
 		schoolClass.setClassTeacher(classTeacher);
 		schoolClass.setCreatedTimestamp(LocalDateTime.now());
 		schoolClass.setModifiedTimestamp(LocalDateTime.now());
-
 		return schoolClass;
 	}
 

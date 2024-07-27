@@ -1,6 +1,6 @@
 package com.studcare.controller;
 
-import com.studcare.data.jpa.service.UserService;
+import com.studcare.service.UserService;
 import com.studcare.model.HttpRequestData;
 import com.studcare.service.AccountService;
 import lombok.extern.slf4j.Slf4j;

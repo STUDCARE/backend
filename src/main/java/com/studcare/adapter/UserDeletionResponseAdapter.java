@@ -6,7 +6,6 @@ import com.studcare.constants.Status;
 import com.studcare.exception.StudCareRuntimeException;
 import com.studcare.model.HttpResponseData;
 import com.studcare.model.UserDeletionResponseDTO;
-import com.studcare.model.UserRegisterResponseDTO;
 import com.studcare.template.GenericRequestAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

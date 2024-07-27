@@ -41,17 +41,14 @@ import java.util.List;
 
 import static com.studcare.util.CommonUtils.createResponseEntity;
 
-@Slf4j @Service public class StudentService {
-
+@Slf4j
+@Service
+public class StudentService {
 	@Autowired private StudentRepository studentRepository;
-
 	@Autowired private ResponseAdapter responseAdapter;
 	@Autowired private YearTermResultRequestAdapter yearTermResultRequestAdapter;
-
 	@Autowired private TermResultRepository termResultRepository;
-
 	@Autowired private SubjectResultRepository subjectResultRepository;
-
 	@Autowired private UserAdapter userAdapter;
 	@Autowired private UserRepository userRepository;
 	@Autowired private MonthlyEvaluationResponseAdapter monthlyEvaluationResponseAdapter;
@@ -59,8 +56,7 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 
 	public ResponseEntity<Object> getStudentResults(String studentEmail, String requestBody) {
 		YearTermDTO yearTermDTO = yearTermResultRequestAdapter.adapt(requestBody);
-		log.info("StudentService.getStudentResults() initiated for student ID: {}, academic year: {}, term: {}", studentEmail, yearTermDTO.getAcademicYear(),
-				yearTermDTO.getTerm());
+		log.info("StudentService.getStudentResults() initiated for student ID: {}, academic year: {}, term: {}", studentEmail, yearTermDTO.getAcademicYear(), yearTermDTO.getTerm());
 		ResponseEntity<Object> responseEntity;
 		HttpResponseData httpResponseData = new HttpResponseData();
 		try {
@@ -68,16 +64,13 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			StudentResultsDTO studentResultsDTO = new StudentResultsDTO();
 			studentResultsDTO.setStudentId(student.getStudentId());
 			studentResultsDTO.setStudentName(student.getUser().getUsername());
-
 			YearResultsDTO yearResultsDTO = new YearResultsDTO();
 			yearResultsDTO.setAcademicYear(yearTermDTO.getAcademicYear());
-
 			TermResultsDTO termResultsDTO = new TermResultsDTO();
 			termResultsDTO.setTermNumber(yearTermDTO.getTerm());
-
 			List<SubjectResultDTO> subjectResultDTOs = new ArrayList<>();
-			TermResult termResult = termResultRepository.findByStudentAndAcademicYearAndTermNumber(student, yearTermDTO.getAcademicYear(),
-					yearTermDTO.getTerm()).orElse(null);
+			TermResult termResult = termResultRepository.findByStudentAndAcademicYearAndTermNumber(student, yearTermDTO.getAcademicYear(), yearTermDTO.getTerm())
+					.orElseThrow(() -> new StudCareDataException("Term results not found"));
 			if (termResult != null) {
 				List<SubjectResult> subjectResults = subjectResultRepository.findByTermResult(termResult);
 				for (SubjectResult subjectResult : subjectResults) {
@@ -91,12 +84,12 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 					subjectResultDTOs.add(subjectResultDTO);
 				}
 			}
-
 			termResultsDTO.setSubjectResults(subjectResultDTOs);
+			termResultsDTO.setClassRank(termResult.getClassRank());
+			termResultsDTO.setTermNote(termResult.getClassTeacherNote());
 			yearResultsDTO.setTermResults(Collections.singletonList(termResultsDTO));
 			studentResultsDTO.setYearResults(Collections.singletonList(yearResultsDTO));
 			studentResultsDTO.setSchoolClass(student.getSchoolClass());
-
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Student results retrieved successfully");
@@ -114,7 +107,6 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			httpResponseData.setResponseBody(exception.getMessage());
 			responseEntity = createResponseEntity(httpResponseData);
 		}
-
 		return responseEntity;
 	}
 
@@ -128,17 +120,14 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			StudentResultsDTO studentResultsDTO = new StudentResultsDTO();
 			studentResultsDTO.setStudentId(student.getStudentId());
 			studentResultsDTO.setStudentName(student.getUser().getUsername());
-
 			YearResultsDTO yearResultsDTO = new YearResultsDTO();
 			yearResultsDTO.setAcademicYear(yearTermDTO.getAcademicYear());
-
 			List<TermResultsDTO> termResultsDTOs = new ArrayList<>();
 			List<TermResult> termResults = termResultRepository.findByStudentAndAcademicYear(student, yearTermDTO.getAcademicYear())
 					.orElseThrow(() -> new StudCareDataException("results not found"));
 			for (TermResult termResult : termResults) {
 				TermResultsDTO termResultsDTO = new TermResultsDTO();
 				termResultsDTO.setTermNumber(termResult.getTermNumber());
-
 				List<SubjectResultDTO> subjectResultDTOs = new ArrayList<>();
 				List<SubjectResult> subjectResults = subjectResultRepository.findByTermResult(termResult);
 				for (SubjectResult subjectResult : subjectResults) {
@@ -151,15 +140,14 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 					subjectResultDTO.setTeacherName(subjectResult.getTeacher().getEmail());
 					subjectResultDTOs.add(subjectResultDTO);
 				}
-
 				termResultsDTO.setSubjectResults(subjectResultDTOs);
+				termResultsDTO.setClassRank(termResult.getClassRank());
+				termResultsDTO.setTermNote(termResult.getClassTeacherNote());
 				termResultsDTOs.add(termResultsDTO);
 			}
-
 			yearResultsDTO.setTermResults(termResultsDTOs);
 			studentResultsDTO.setYearResults(Collections.singletonList(yearResultsDTO));
 			studentResultsDTO.setSchoolClass(student.getSchoolClass());
-
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Student year results retrieved successfully");
@@ -177,7 +165,6 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			httpResponseData.setResponseBody(exception.getMessage());
 			responseEntity = createResponseEntity(httpResponseData);
 		}
-
 		return responseEntity;
 	}
 
@@ -216,6 +203,8 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 					subjectResultDTOs.add(subjectResultDTO);
 				}
 				termResultsDTO.setSubjectResults(subjectResultDTOs);
+				termResultsDTO.setClassRank(termResult.getClassRank());
+				termResultsDTO.setTermNote(termResult.getClassTeacherNote());
 				yearResultsDTO.getTermResults().add(termResultsDTO);
 				studentResultsDTO.setSchoolClass(student.getSchoolClass());
 			}
@@ -237,7 +226,6 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			httpResponseData.setResponseBody(exception.getMessage());
 			responseEntity = createResponseEntity(httpResponseData);
 		}
-
 		return responseEntity;
 	}
 
@@ -276,21 +264,14 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		log.info("ClassService.addClassTeacherNote() initiated for student ID: {}", noteDTO.getStudent());
 		ResponseEntity<Object> responseEntity;
 		HttpResponseData httpResponseData = new HttpResponseData();
-
 		try {
-			Student student = studentRepository.findByUser_Email(noteDTO.getStudent())
-					.orElseThrow(() -> new StudCareValidationException("Student not found"));
-
-			User teacher = userRepository.findByEmail(noteDTO.getTeacher())
-					.orElseThrow(() -> new StudCareValidationException("Teacher not found"));
-
+			Student student = studentRepository.findByUser_Email(noteDTO.getStudent()).orElseThrow(() -> new StudCareValidationException("Student not found"));
+			User teacher = userRepository.findByEmail(noteDTO.getTeacher()).orElseThrow(() -> new StudCareValidationException("Teacher not found"));
 			SchoolClass studentClass = student.getSchoolClass();
 			if (!studentClass.getClassTeacher().equals(teacher)) {
 				throw new StudCareValidationException("The provided teacher is not the class teacher for this student");
 			}
-
-			TermResult termResult = termResultRepository
-					.findByStudentAndAcademicYearAndTermNumber(student, noteDTO.getAcademicYear(), noteDTO.getTerm())
+			TermResult termResult = termResultRepository.findByStudentAndAcademicYearAndTermNumber(student, noteDTO.getAcademicYear(), noteDTO.getTerm())
 					.orElseGet(() -> {
 						TermResult newTermResult = new TermResult();
 						newTermResult.setStudent(student);
@@ -298,17 +279,13 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 						newTermResult.setTermNumber(noteDTO.getTerm());
 						return newTermResult;
 					});
-
 			termResult.setClassTeacherNote(noteDTO.getClassTeacherNote());
-
 			termResultRepository.save(termResult);
-
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Class teacher note added successfully");
 			httpResponseData = responseAdapter.adapt(responseDTO);
 			responseEntity = createResponseEntity(httpResponseData);
-
 		} catch (StudCareValidationException exception) {
 			log.error("ClassService.addClassTeacherNote() validation error", exception);
 			httpResponseData.setHttpStatus(HttpStatus.BAD_REQUEST);
@@ -320,7 +297,6 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 			httpResponseData.setResponseBody(exception.getMessage());
 			responseEntity = createResponseEntity(httpResponseData);
 		}
-
 		return responseEntity;
 	}
 }

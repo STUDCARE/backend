@@ -62,7 +62,6 @@ public class StudentAdapter {
 			WardDTO wardDTO = wardAdapter.adapt(student.getWard());
 			studentDTO.setWardDTO(wardDTO);
 		}
-
 		return studentDTO;
 	}
 }

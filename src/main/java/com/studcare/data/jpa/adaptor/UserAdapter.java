@@ -1,7 +1,6 @@
 package com.studcare.data.jpa.adaptor;
 
 import com.studcare.data.jpa.entity.User;
-import com.studcare.exception.StudCareValidationException;
 import com.studcare.model.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

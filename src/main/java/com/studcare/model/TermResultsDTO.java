@@ -8,4 +8,6 @@ import java.util.List;
 public class TermResultsDTO {
 	private String termNumber;
 	private List<SubjectResultDTO> subjectResults;
+	private String classRank;
+	private String termNote;
 }

@@ -7,10 +7,8 @@ import com.studcare.constants.Status;
 import com.studcare.data.jpa.adaptor.SchoolClassAdapter;
 import com.studcare.data.jpa.adaptor.UserAdapter;
 import com.studcare.data.jpa.adaptor.WardAdapter;
-import com.studcare.data.jpa.dto.SchoolClassDTO;
 import com.studcare.data.jpa.dto.StudentDTO;
 import com.studcare.data.jpa.dto.WardDTO;
-import com.studcare.data.jpa.entity.SchoolClass;
 import com.studcare.data.jpa.entity.Student;
 import com.studcare.data.jpa.entity.User;
 import com.studcare.data.jpa.entity.Ward;
@@ -94,7 +92,6 @@ public class WardService {
 		ResponseEntity<Object> responseEntity;
 		ResponseDTO responseDTO;
 		HttpResponseData httpResponseData = new HttpResponseData();
-
 		try {
 			AddStudentsRequestDTO addStudentsRequestDTO = addStudentRequestAdapter.adapt(httpRequestData);
 			responseDTO = addStudentsToWard(wardName, addStudentsRequestDTO.getStudents().getStudentEmails());
@@ -112,7 +109,6 @@ public class WardService {
 			responseEntity = createResponseEntity(httpResponseData);
 			log.error("WardService.addStudents() an error occurred", exception);
 		}
-
 		return responseEntity;
 	}
 
@@ -127,7 +123,6 @@ public class WardService {
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Students in ward retrieved successfully");
 			responseDTO.setData(students);
-
 			httpResponseData = responseAdapter.adapt(responseDTO);
 			responseEntity = createResponseEntity(httpResponseData);
 			log.info("WardService.getStudentsInWard() finished successfully");
@@ -156,12 +151,10 @@ public class WardService {
 			wardDetails.setWardName(ward.getWardName());
 			wardDetails.setHostelMaster(userAdapter.adapt(ward.getHostelMaster()));
 			wardDetails.setStudents(students.stream().map(this::adaptStudent).collect(Collectors.toList()));
-
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Ward details retrieved successfully");
 			responseDTO.setData(Collections.singletonList(wardDetails));
-
 			httpResponseData = responseAdapter.adapt(responseDTO);
 			responseEntity = createResponseEntity(httpResponseData);
 		} catch (StudCareValidationException exception) {
@@ -175,18 +168,15 @@ public class WardService {
 			httpResponseData.setResponseBody(exception.getMessage());
 			responseEntity = createResponseEntity(httpResponseData);
 		}
-
 		return responseEntity;
 	}
 
 	private ResponseDTO addWard(WardDTO wardDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
-		User hostelMaster = userRepository.findByEmail(wardDTO.getHostelMaster().getEmail())
-				.orElseThrow(() -> new StudCareValidationException("Hostel master not found"));
+		User hostelMaster = userRepository.findByEmail(wardDTO.getHostelMaster().getEmail()).orElseThrow(() -> new StudCareValidationException("Hostel master not found"));
 		UserDTO hostelMasterDTO = userAdapter.adapt(hostelMaster);
 		wardDTO.setHostelMaster(hostelMasterDTO);
 		Ward ward = wardAdapter.adapt(wardDTO);
-
 		if (wardRepository.findByWardName(ward.getWardName()).isPresent()) {
 			responseDTO.setResponseCode(Status.FAILURE);
 			responseDTO.setMessage("Ward already exists with name: " + ward.getWardName());
@@ -200,8 +190,6 @@ public class WardService {
 				throw new StudCareDataException("Failed saving ward to the database");
 			}
 		}
-		
-		
 		return responseDTO;
 	}
 
@@ -217,10 +205,8 @@ public class WardService {
 						Student student = optionalStudent.get();
 						student.setWard(ward);
 						studentRepository.save(student);
-
 						responseDTO.setResponseCode(Status.SUCCESS);
 						responseDTO.setMessage("Students added to the ward successfully");
-
 					} else {
 						responseDTO.setResponseCode(Status.FAILURE);
 						responseDTO.setMessage("students not found");
@@ -229,12 +215,12 @@ public class WardService {
 			} catch (Exception exception) {
 				throw new StudCareDataException("Failed to add students to the ward");
 			}
-		}else {
-				responseDTO.setResponseCode(Status.FAILURE);
+		} else {
+			responseDTO.setResponseCode(Status.FAILURE);
 			responseDTO.setMessage("Ward not found");
-			}
-			return responseDTO;
 		}
+		return responseDTO;
+	}
 
 	private StudentDTO adaptStudent(Student student) {
 		StudentDTO dto = new StudentDTO();
