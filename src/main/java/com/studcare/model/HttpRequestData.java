@@ -1,10 +1,12 @@
 package com.studcare.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
 public class HttpRequestData {
 	private String reference;
 	private Map<String, String> headers;
