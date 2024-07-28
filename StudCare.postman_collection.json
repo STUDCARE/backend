@@ -7,6 +7,34 @@
 	},
 	"item": [
 		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"example@example.com\",\n  \"password\": \"example123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create Account",
 			"request": {
 				"method": "POST",
@@ -87,34 +115,6 @@
 					"path": [
 						"auth",
 						"register"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "login",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"email\": \"example@example.com\",\n  \"password\": \"example123\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8080/auth/login",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"auth",
-						"login"
 					]
 				}
 			},
@@ -225,6 +225,124 @@
 			"response": []
 		},
 		{
+			"name": "create subject",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"className\": \"12D\",\n  \"classTeacher\": {\n    \"email\": \"cteacher12@gmail.com\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/class/create",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"class",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add students to class",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \n    \"studentEmails\": [\n      \"student6@example.com\",\n      \"student7@example.com\"\n    ]\n  \n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/class/8D/add/students",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"class",
+						"8D",
+						"add",
+						"students"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add students to ward",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDg0OTg3LCJleHAiOjE3MjE1NzEzODd9.64aZ_7WuTCTjGdov9HxPbhC_4z9JKvKXqAc0Mffa9rY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \n    \"studentEmails\": [\n      \"student6@example.com\",\n      \"student7@example.com\"\n    ]\n  \n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/ward/AA/add/students",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ward",
+						"AA",
+						"add",
+						"students"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "addSubjectsToClass",
 			"request": {
 				"auth": {
@@ -259,6 +377,44 @@
 						"8D",
 						"add",
 						"subjects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign Teacher to Subject",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"className\": \"12D\",\n  \"classTeacher\": {\n    \"email\": \"cteacher12@gmail.com\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/class/create",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"class",
+						"create"
 					]
 				}
 			},
@@ -305,7 +461,7 @@
 			"response": []
 		},
 		{
-			"name": "create subject",
+			"name": "add results to student subject",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -343,7 +499,7 @@
 			"response": []
 		},
 		{
-			"name": "Assign Teacher to Subject",
+			"name": "add class teacher note",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -375,6 +531,131 @@
 					"path": [
 						"class",
 						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add evaluation to hostel student",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNjY2Mzc5LCJleHAiOjE3MjE3NTI3Nzl9.BA5-d6_edAHpQNKAneIDNxYEgeJrJvwKX5TVZ8_ZfyM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"evaluationMonth\": \"02\",\n    \"evaluationYear\": \"2023\",\n    \"behavioralData\": \"good\",\n    \"extraNote\": \"good again\",\n    \"extracurricularActivities\": \"very good\",\n    \"healthData\": \"very good again\",\n    \"wardName\": \"AA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/hostelmaster/warden1@gmail.com/student/student4@gmail.com/evaluation",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"hostelmaster",
+						"warden1@gmail.com",
+						"student",
+						"student4@gmail.com",
+						"evaluation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get class term results",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNTU3MDg5LCJleHAiOjE3MjE2NDM0ODl9.MSzgPKm7e5fhjjd9_lqBquyd4X9ywtgnyZI2Su5_cKI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"academicYear\": \"2023-2024\",\n    \"term\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/class/1A/results",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"class",
+						"1A",
+						"results"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get evaluations of hostel students",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNjY2Mzc5LCJleHAiOjE3MjE3NTI3Nzl9.BA5-d6_edAHpQNKAneIDNxYEgeJrJvwKX5TVZ8_ZfyM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"months\":[\n        \"11\",\n        \"22\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/student/student1@gmail.com/evaluations",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"student1@gmail.com",
+						"evaluations"
 					]
 				}
 			},
@@ -494,86 +775,6 @@
 						"subject",
 						"maths",
 						"teachers"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "add students to class",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \n    \"studentEmails\": [\n      \"student6@example.com\",\n      \"student7@example.com\"\n    ]\n  \n}\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8080/class/8D/add/students",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"class",
-						"8D",
-						"add",
-						"students"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "add students to ward",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDg0OTg3LCJleHAiOjE3MjE1NzEzODd9.64aZ_7WuTCTjGdov9HxPbhC_4z9JKvKXqAc0Mffa9rY",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \n    \"studentEmails\": [\n      \"student6@example.com\",\n      \"student7@example.com\"\n    ]\n  \n}\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8080/ward/AA/add/students",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"ward",
-						"AA",
-						"add",
-						"students"
 					]
 				}
 			},
@@ -724,6 +925,177 @@
 						"class",
 						"8D",
 						"details"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get class results",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNTU3MDg5LCJleHAiOjE3MjE2NDM0ODl9.MSzgPKm7e5fhjjd9_lqBquyd4X9ywtgnyZI2Su5_cKI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"academicYear\": \"2023-2024\",\n    \"term\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/class/1A/results",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"class",
+						"1A",
+						"results"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get student term results",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNTU3MDg5LCJleHAiOjE3MjE2NDM0ODl9.MSzgPKm7e5fhjjd9_lqBquyd4X9ywtgnyZI2Su5_cKI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"academicYear\": \"2023-2024\",\n    \"term\": \"2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/student/student5@gmail.com/term/results",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"student5@gmail.com",
+						"term",
+						"results"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get student year results",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNTU3MDg5LCJleHAiOjE3MjE2NDM0ODl9.MSzgPKm7e5fhjjd9_lqBquyd4X9ywtgnyZI2Su5_cKI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"academicYear\": \"2023-2024\",\n    \"term\": \"2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/student/student5@gmail.com/year/results",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"student5@gmail.com",
+						"year",
+						"results"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get student results",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNTU3MDg5LCJleHAiOjE3MjE2NDM0ODl9.MSzgPKm7e5fhjjd9_lqBquyd4X9ywtgnyZI2Su5_cKI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"academicYear\": \"2023-2024\",\n    \"term\": \"2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/student/student5@gmail.com/year/results",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"student5@gmail.com",
+						"year",
+						"results"
 					]
 				}
 			},
