@@ -18,12 +18,12 @@ public class ResponseAdapter implements GenericRequestAdapter<ResponseDTO, HttpR
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	@Override
-	public HttpResponseData adapt(ResponseDTO classResponseDTO) {
+	@Override public HttpResponseData adapt(ResponseDTO classResponseDTO) {
 		HttpResponseData responseData = new HttpResponseData();
+
 		if (classResponseDTO.getResponseCode().equals(Status.SUCCESS)) {
 			responseData.setHttpStatus(HttpStatus.OK);
-		} else if (classResponseDTO.getResponseCode().equals(Status.FAILURE)) {
+		} else {
 			responseData.setHttpStatus(HttpStatus.BAD_REQUEST);
 		}
 		responseData.setResponseBody(mapResponseData(classResponseDTO));

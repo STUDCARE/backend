@@ -18,12 +18,11 @@ public class UserDeletionResponseAdapter implements GenericRequestAdapter<UserDe
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	@Override
-	public HttpResponseData adapt(UserDeletionResponseDTO deletionResponseDTO) {
+	@Override public HttpResponseData adapt(UserDeletionResponseDTO deletionResponseDTO) {
 		HttpResponseData responseData = new HttpResponseData();
-		if(deletionResponseDTO.getResponseCode().equals(Status.SUCCESS)){
+		if (deletionResponseDTO.getResponseCode().equals(Status.SUCCESS)) {
 			responseData.setHttpStatus(HttpStatus.OK);
-		} else if (deletionResponseDTO.getResponseCode().equals(Status.FAILURE)){
+		} else {
 			responseData.setHttpStatus(HttpStatus.BAD_REQUEST);
 		}
 		responseData.setResponseBody(mapResponseData(deletionResponseDTO));

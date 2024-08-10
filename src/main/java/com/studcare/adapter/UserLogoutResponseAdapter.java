@@ -23,7 +23,7 @@ public class UserLogoutResponseAdapter implements GenericRequestAdapter<LogoutRe
 		HttpResponseData responseData = new HttpResponseData();
 		if (logoutResponseDTO.getResponseCode().equals(Status.SUCCESS)) {
 			responseData.setHttpStatus(HttpStatus.OK);
-		} else if (logoutResponseDTO.getResponseCode().equals(Status.FAILURE)){
+		} else{
 			responseData.setHttpStatus(HttpStatus.BAD_REQUEST);
 		}
 		responseData.setResponseBody(mapResponseData(logoutResponseDTO));

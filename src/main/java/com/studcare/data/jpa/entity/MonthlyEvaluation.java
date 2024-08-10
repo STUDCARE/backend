@@ -33,14 +33,23 @@ public class MonthlyEvaluation {
 	@Column(name = "EvaluationYear")
 	private String evaluationYear;
 
-
 	@Column(name = "BehavioralData")
 	private String behavioralData;
 
 	@Column(name = "ExtraNote")
 	private String extraNote;
 
-	@Column(name = "ExtracurricularActivities") private String extracurricularActivities;
+	@Column(name = "ExtracurricularActivities")
+	private String extracurricularActivities;
+
+	@Column(name = "SportData")
+	private String sportData;
+
+	@Column(name = "ExtracurricularActivitiesGrade")
+	private GradingScale extracurricularActivityGrade;
+
+	@Column(name = "sportGrade")
+	private GradingScale sportGrade;
 
 	@Column(name = "HealthData")
 	private String healthData;

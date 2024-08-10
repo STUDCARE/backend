@@ -14,6 +14,9 @@ public class MonthlyEvaluationAdapter {
 		monthlyEvaluation.setExtraNote(dto.getExtraNote());
 		monthlyEvaluation.setExtracurricularActivities(dto.getExtracurricularActivities());
 		monthlyEvaluation.setHealthData(dto.getHealthData());
+		monthlyEvaluation.setSportData(dto.getSportData());
+		monthlyEvaluation.setExtracurricularActivityGrade(dto.getExtracurricularActivityGrade());
+		monthlyEvaluation.setSportGrade(dto.getSportGrade());
 		return monthlyEvaluation;
 	}
 }

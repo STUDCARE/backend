@@ -18,12 +18,11 @@ public class UserProfileResponseAdapter implements GenericRequestAdapter<UserPro
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	@Override
-	public HttpResponseData adapt(UserProfileResponseDTO userProfileResponseDTO) {
+	@Override public HttpResponseData adapt(UserProfileResponseDTO userProfileResponseDTO) {
 		HttpResponseData responseData = new HttpResponseData();
 		if (userProfileResponseDTO.getResponseCode().equals(Status.SUCCESS)) {
 			responseData.setHttpStatus(HttpStatus.OK);
-		} else if (userProfileResponseDTO.getResponseCode().equals(Status.FAILURE)){
+		} else {
 			responseData.setHttpStatus(HttpStatus.BAD_REQUEST);
 		}
 		responseData.setResponseBody(mapResponseData(userProfileResponseDTO));

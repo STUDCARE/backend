@@ -18,12 +18,11 @@ public class UserRegisterResponseAdapter implements GenericRequestAdapter<UserRe
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	@Override
-	public HttpResponseData adapt(UserRegisterResponseDTO registerResponseDTO) {
+	@Override public HttpResponseData adapt(UserRegisterResponseDTO registerResponseDTO) {
 		HttpResponseData responseData = new HttpResponseData();
-		if(registerResponseDTO.getResponseCode().equals(Status.SUCCESS)){
+		if (registerResponseDTO.getResponseCode().equals(Status.SUCCESS)) {
 			responseData.setHttpStatus(HttpStatus.OK);
-		} else if (registerResponseDTO.getResponseCode().equals(Status.FAILURE)){
+		} else {
 			responseData.setHttpStatus(HttpStatus.BAD_REQUEST);
 		}
 		responseData.setResponseBody(mapResponseData(registerResponseDTO));

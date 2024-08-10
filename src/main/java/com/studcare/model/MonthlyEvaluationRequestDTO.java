@@ -1,5 +1,6 @@
 package com.studcare.model;
 
+import com.studcare.data.jpa.entity.GradingScale;
 import lombok.Data;
 
 @Data
@@ -11,4 +12,7 @@ public class MonthlyEvaluationRequestDTO {
 	private String extracurricularActivities;
 	private String healthData;
 	private String wardName;
+	private String sportData;
+	private GradingScale extracurricularActivityGrade;
+	private GradingScale sportGrade;
 }

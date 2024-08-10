@@ -26,6 +26,9 @@ public class MonthlyEvaluationResponseAdapter {
 			data.setExtraNote(evaluation.getExtraNote());
 			data.setExtracurricularActivities(evaluation.getExtracurricularActivities());
 			data.setHealthData(evaluation.getHealthData());
+			data.setSportData(evaluation.getSportData());
+			data.setExtracurricularActivityGrade(evaluation.getExtracurricularActivityGrade());
+			data.setSportGrade(evaluation.getSportGrade());
 			String month = evaluation.getEvaluationMonth();
 			evaluationMap.computeIfAbsent(month, k -> new ArrayList<>()).add(data);
 		}
