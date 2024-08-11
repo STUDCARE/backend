@@ -81,4 +81,16 @@ public class StudentController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@GetMapping("/{student}/suggestions")
+	public ResponseEntity<Object> getStudentSuggestions(
+			@PathVariable String student) {
+		try {
+			log.info("StudentService.getStudentSuggestions()[GET] process initiated for student name: {}", student);
+			return studentService.getStudentSuggestions(student);
+		} catch (Exception exception) {
+			log.error("StudentService.getStudentSuggestions()[GET] unexpected error occurred", exception);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

@@ -30,6 +30,6 @@ public class AuthenticationService {
 		var user = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(() -> new StudCareValidationException("User not found"));
 		var jwtToken = jwtService.generateToken(user);
 		log.info("successfully login {}",user);
-		return AuthenticationResponse.builder().token(jwtToken).build();
+		return AuthenticationResponse.builder().token(jwtToken).user(user).build();
 	}
 }

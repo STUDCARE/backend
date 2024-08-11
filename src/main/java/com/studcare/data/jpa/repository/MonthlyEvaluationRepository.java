@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface MonthlyEvaluationRepository extends JpaRepository<MonthlyEvaluation, Long> {
 	List<MonthlyEvaluation> findByStudentAndEvaluationMonthIn(Student student, List<String> months);
+	List<MonthlyEvaluation> findByStudent(Student student);
 }

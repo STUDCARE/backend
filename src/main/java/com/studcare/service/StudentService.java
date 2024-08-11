@@ -5,6 +5,7 @@ import com.studcare.adapter.ResponseAdapter;
 import com.studcare.adapter.YearTermResultRequestAdapter;
 import com.studcare.constants.Status;
 import com.studcare.data.jpa.adaptor.UserAdapter;
+import com.studcare.data.jpa.entity.GradingScale;
 import com.studcare.data.jpa.entity.MonthlyEvaluation;
 import com.studcare.data.jpa.entity.SchoolClass;
 import com.studcare.data.jpa.entity.Student;
@@ -20,6 +21,7 @@ import com.studcare.exception.StudCareDataException;
 import com.studcare.exception.StudCareValidationException;
 import com.studcare.model.ClassTeacherNoteDTO;
 import com.studcare.model.HttpResponseData;
+import com.studcare.model.MonthlyEvaluationData;
 import com.studcare.model.MonthlyEvaluationResponseDTO;
 import com.studcare.model.MonthlyEvaluationsDTO;
 import com.studcare.model.ResponseDTO;
@@ -37,7 +39,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.studcare.util.CommonUtils.createResponseEntity;
 
@@ -298,5 +305,69 @@ public class StudentService {
 			responseEntity = createResponseEntity(httpResponseData);
 		}
 		return responseEntity;
+	}
+
+	public ResponseEntity<Object> getStudentSuggestions(String studentEmail) {
+		log.info("StudentService.getStudentSuggestions() initiated for student ID: {}", studentEmail);
+		ResponseEntity<Object> responseEntity;
+		HttpResponseData httpResponseData = new HttpResponseData();
+		try {
+			Student student = studentRepository.findByUser_Email(studentEmail).orElseThrow(() -> new StudCareDataException("Student not found"));
+			Map<String, String> performanceData = new HashMap<>();
+			Map<String, List<Double>> subjectMarks = new HashMap<>();
+			List<TermResult> termResults = termResultRepository.findByStudent(student).orElseThrow(() -> new StudCareDataException("Results not found"));
+			for (TermResult termResult : termResults) {
+				for (SubjectResult subjectResult : termResult.getSubjectResults()) {
+					String subjectName = subjectResult.getSubject().getSubjectName();
+					double marks = Double.parseDouble(subjectResult.getMarks());
+					subjectMarks.computeIfAbsent(subjectName, k -> new ArrayList<>()).add(marks);
+				}
+			}
+			for (Map.Entry<String, List<Double>> entry : subjectMarks.entrySet()) {
+				double average = entry.getValue().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+				performanceData.put(entry.getKey(), String.format("%.2f", average));
+			}
+			List<MonthlyEvaluation> evaluations = monthlyEvaluationRepository.findByStudent(student);
+			MonthlyEvaluationResponseDTO monthlyEvaluationResponseDTO = monthlyEvaluationResponseAdapter.adapt(evaluations, null, null);
+			EnumMap<GradingScale, Integer> sportGradeCount = new EnumMap<>(GradingScale.class);
+			EnumMap<GradingScale, Integer> extracurricularGradeCount = new EnumMap<>(GradingScale.class);
+			for (List<MonthlyEvaluationData> monthlyData : monthlyEvaluationResponseDTO.getEvaluations().values()) {
+				for (MonthlyEvaluationData data : monthlyData) {
+					sportGradeCount.merge(data.getSportGrade(), 1, Integer::sum);
+					extracurricularGradeCount.merge(data.getExtracurricularActivityGrade(), 1, Integer::sum);
+				}
+			}
+			GradingScale mostFrequentSportGrade = getMostFrequentGrade(sportGradeCount);
+			GradingScale mostFrequentExtracurricularGrade = getMostFrequentGrade(extracurricularGradeCount);
+			performanceData.put("Sports", mostFrequentSportGrade.toString());
+			performanceData.put("Extracurricular", mostFrequentExtracurricularGrade.toString());
+
+			//ToDO call other backend to get the suggestion
+
+			ResponseDTO responseDTO = new ResponseDTO();
+			responseDTO.setResponseCode(Status.SUCCESS);
+			responseDTO.setMessage("Student suggestions retrieved successfully");
+			responseDTO.setData(Collections.singletonList("data need to be added here"));
+			httpResponseData = responseAdapter.adapt(responseDTO);
+			responseEntity = createResponseEntity(httpResponseData);
+		} catch (StudCareValidationException exception) {
+			log.error("StudentService.getStudentAllResults() validation error", exception);
+			httpResponseData.setHttpStatus(HttpStatus.BAD_REQUEST);
+			httpResponseData.setResponseBody(exception.getMessage());
+			responseEntity = createResponseEntity(httpResponseData);
+		} catch (Exception exception) {
+			log.error("StudentService.getStudentAllResults() an error occurred", exception);
+			httpResponseData.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			httpResponseData.setResponseBody(exception.getMessage());
+			responseEntity = createResponseEntity(httpResponseData);
+		}
+		return responseEntity;
+	}
+
+	private GradingScale getMostFrequentGrade(Map<GradingScale, Integer> gradeCount) {
+		return gradeCount.entrySet().stream()
+				.max(Map.Entry.comparingByValue())
+				.map(Map.Entry::getKey)
+				.orElse(null);
 	}
 }
