@@ -1,4 +1,4 @@
-package com.studcare.data.security;
+package com.studcare.security;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.studcare.data.jpa.repository.UserRepository;

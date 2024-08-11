@@ -1,4 +1,4 @@
-package com.studcare.data.security.auth.dto;
+package com.studcare.security.auth.dto;
 
 import com.studcare.data.jpa.entity.User;
 import lombok.Builder;

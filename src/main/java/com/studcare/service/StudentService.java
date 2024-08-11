@@ -1,5 +1,8 @@
 package com.studcare.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studcare.adapter.MonthlyEvaluationResponseAdapter;
 import com.studcare.adapter.ResponseAdapter;
 import com.studcare.adapter.YearTermResultRequestAdapter;
@@ -18,6 +21,7 @@ import com.studcare.data.jpa.repository.SubjectResultRepository;
 import com.studcare.data.jpa.repository.TermResultRepository;
 import com.studcare.data.jpa.repository.UserRepository;
 import com.studcare.exception.StudCareDataException;
+import com.studcare.exception.StudCareRuntimeException;
 import com.studcare.exception.StudCareValidationException;
 import com.studcare.model.ClassTeacherNoteDTO;
 import com.studcare.model.HttpResponseData;
@@ -33,9 +37,15 @@ import com.studcare.model.YearResultsDTO;
 import com.studcare.model.YearTermDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,8 +53,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.studcare.util.CommonUtils.createResponseEntity;
 
@@ -60,6 +68,10 @@ public class StudentService {
 	@Autowired private UserRepository userRepository;
 	@Autowired private MonthlyEvaluationResponseAdapter monthlyEvaluationResponseAdapter;
 	@Autowired private MonthlyEvaluationRepository monthlyEvaluationRepository;
+	@Autowired private RestTemplate restTemplate;
+	@Autowired private ObjectMapper objectMapper;
+	@Value(value = "${studcare.ai.engine.service.url}")
+	private String getStudentSuggestionsUrl;
 
 	public ResponseEntity<Object> getStudentResults(String studentEmail, String requestBody) {
 		YearTermDTO yearTermDTO = yearTermResultRequestAdapter.adapt(requestBody);
@@ -342,12 +354,12 @@ public class StudentService {
 			performanceData.put("Sports", mostFrequentSportGrade.toString());
 			performanceData.put("Extracurricular", mostFrequentExtracurricularGrade.toString());
 
-			//ToDO call other backend to get the suggestion
+			JsonNode studentSuggestion= getStudentSuggestionsFromModel(performanceData);
 
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Student suggestions retrieved successfully");
-			responseDTO.setData(Collections.singletonList("data need to be added here"));
+			responseDTO.setData(Collections.singletonList(studentSuggestion));
 			httpResponseData = responseAdapter.adapt(responseDTO);
 			responseEntity = createResponseEntity(httpResponseData);
 		} catch (StudCareValidationException exception) {
@@ -362,6 +374,30 @@ public class StudentService {
 			responseEntity = createResponseEntity(httpResponseData);
 		}
 		return responseEntity;
+	}
+
+	private JsonNode getStudentSuggestionsFromModel(Map<String, String> performanceData) {
+		try {
+			String jsonRequest = objectMapper.writeValueAsString(performanceData);
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<String> entity = new HttpEntity<>(jsonRequest, headers);
+
+			ResponseEntity<String> response = restTemplate.postForEntity(getStudentSuggestionsUrl, entity, String.class);
+
+			if (response.getStatusCode() == HttpStatus.OK) {
+				return objectMapper.readTree(response.getBody());
+			} else {
+				log.error("ML service returned non-OK status: {}", response.getStatusCode());
+				throw new StudCareRuntimeException("ML service returned non-OK status: " + response.getStatusCode());
+			}
+		} catch (JsonProcessingException exception) {
+			log.error("Error processing JSON for ML service request/response", exception);
+			throw new StudCareRuntimeException("Error processing JSON for ML service communication", exception.getCause());
+		} catch (RestClientException exception) {
+			log.error("Error communicating with ML service", exception);
+			throw new StudCareRuntimeException("Error communicating with ML service", exception.getCause());
+		}
 	}
 
 	private GradingScale getMostFrequentGrade(Map<GradingScale, Integer> gradeCount) {

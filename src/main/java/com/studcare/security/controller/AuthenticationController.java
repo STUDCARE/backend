@@ -1,8 +1,8 @@
-package com.studcare.data.security.controller;
+package com.studcare.security.controller;
 
-import com.studcare.data.security.auth.dto.AuthenticationRequest;
-import com.studcare.data.security.auth.dto.AuthenticationResponse;
-import com.studcare.data.security.auth.service.AuthenticationService;
+import com.studcare.security.auth.dto.AuthenticationRequest;
+import com.studcare.security.auth.dto.AuthenticationResponse;
+import com.studcare.security.auth.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

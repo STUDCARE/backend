@@ -1,4 +1,4 @@
-package com.studcare.data.security;
+package com.studcare.security;
 
 import com.studcare.constants.Security;
 import jakarta.servlet.FilterChain;

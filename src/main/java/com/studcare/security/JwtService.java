@@ -1,4 +1,4 @@
-package com.studcare.data.security;
+package com.studcare.security;
 
 import com.studcare.data.jpa.entity.User;
 import io.jsonwebtoken.Claims;

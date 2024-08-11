@@ -9,7 +9,7 @@ import com.studcare.data.jpa.entity.User;
 import com.studcare.data.jpa.entity.UserRole;
 import com.studcare.data.jpa.repository.StudentRepository;
 import com.studcare.data.jpa.repository.UserRepository;
-import com.studcare.data.security.JwtService;
+import com.studcare.security.JwtService;
 import com.studcare.exception.StudCareDataException;
 import com.studcare.exception.StudCareRuntimeException;
 import com.studcare.exception.StudCareValidationException;

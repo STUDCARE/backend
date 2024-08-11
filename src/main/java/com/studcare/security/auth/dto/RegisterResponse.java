@@ -1,4 +1,4 @@
-package com.studcare.data.security.auth.dto;
+package com.studcare.security.auth.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -10,5 +10,5 @@ public class ResponseDTO {
 	private Status responseCode;
 	private String message;
 	private String errorCode;
-	private List Data;
+	private List data;
 }
