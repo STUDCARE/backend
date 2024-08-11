@@ -1,4 +1,4 @@
-package com.studcare.security.controller;
+package com.studcare.security.auth.controller;
 
 import com.studcare.model.HttpRequestData;
 import com.studcare.security.auth.service.AuthenticationService;

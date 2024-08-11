@@ -2,6 +2,7 @@ package com.studcare.security.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.studcare.constants.Status;
 import com.studcare.data.jpa.repository.UserRepository;
 import com.studcare.exception.StudCareRuntimeException;
 import com.studcare.exception.StudCareValidationException;
@@ -34,6 +35,7 @@ public class AuthenticationService {
 
 	public ResponseEntity<Object> authenticate(HttpRequestData httpRequestData) {
 		log.info("AuthenticationService.authenticate() initiated");
+		AuthenticationResponse authenticationResponse = new AuthenticationResponse();
 		ResponseEntity<Object> responseEntity;
 		HttpResponseData httpResponseData = new HttpResponseData();
 		try {
@@ -41,24 +43,32 @@ public class AuthenticationService {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
 			var user = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(() -> new StudCareValidationException("User not found"));
 			var jwtToken = jwtService.generateToken(user);
-			AuthenticationResponse authenticationResponse = AuthenticationResponse.builder().token(jwtToken).user(user).build();
-			httpResponseData.setHttpStatus(HttpStatus.OK);
-			httpResponseData.setResponseBody(mapResponseData(authenticationResponse));
+			authenticationResponse.setToken(jwtToken);
+			authenticationResponse.setUser(user);
+			authenticationResponse.setResponseCode(Status.SUCCESS);
+			authenticationResponse.setMessage("User Logged in Successfully");
+			httpResponseData = adaptAuthenticationResponse(authenticationResponse);
 			responseEntity = createResponseEntity(httpResponseData);
 			log.info("AuthenticationService.authenticate() finished for {}", authenticationRequest.getEmail());
 		} catch (StudCareValidationException exception) {
 			httpResponseData.setHttpStatus(HttpStatus.BAD_REQUEST);
-			httpResponseData.setResponseBody(exception.getMessage());
+			authenticationResponse.setResponseCode(Status.FAILURE);
+			authenticationResponse.setMessage(exception.getMessage());
+			httpResponseData.setResponseBody(mapResponseData(authenticationResponse));
 			responseEntity = createResponseEntity(httpResponseData);
 			log.error("AuthenticationService.authenticate() a validation error occurred while processing the request", exception);
 		} catch (StudCareRuntimeException exception) {
 			httpResponseData.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			httpResponseData.setResponseBody(exception.getMessage());
+			authenticationResponse.setResponseCode(Status.FAILURE);
+			authenticationResponse.setMessage(exception.getMessage());
+			httpResponseData.setResponseBody(mapResponseData(authenticationResponse));
 			responseEntity = createResponseEntity(httpResponseData);
 			log.error("AuthenticationService.authenticate() a runtime error occurred while processing the request", exception);
 		} catch (Exception exception) {
 			httpResponseData.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-			httpResponseData.setResponseBody(exception.getMessage());
+			authenticationResponse.setResponseCode(Status.FAILURE);
+			authenticationResponse.setMessage(exception.getMessage());
+			httpResponseData.setResponseBody(mapResponseData(authenticationResponse));
 			responseEntity = createResponseEntity(httpResponseData);
 			log.error("AuthenticationService.authenticate() an error occurred while processing the request", exception);
 		}
@@ -73,6 +83,18 @@ public class AuthenticationService {
 			throw new StudCareRuntimeException("user login request to AuthenticationRequest object failed");
 		}
 	}
+
+	private HttpResponseData adaptAuthenticationResponse(AuthenticationResponse authenticationResponse) {
+		HttpResponseData responseData = new HttpResponseData();
+		if (authenticationResponse.getResponseCode().equals(Status.SUCCESS)) {
+			responseData.setHttpStatus(HttpStatus.OK);
+		} else {
+			responseData.setHttpStatus(HttpStatus.BAD_REQUEST);
+		}
+		responseData.setResponseBody(mapResponseData(authenticationResponse));
+		return responseData;
+	}
+
 	private String mapResponseData(AuthenticationResponse authenticationResponse) {
 		try {
 			return objectMapper.writeValueAsString(authenticationResponse);
