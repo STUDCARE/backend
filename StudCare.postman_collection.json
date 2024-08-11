@@ -21,11 +21,16 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/auth/login",
+					"raw": "http://studcare.koreacentral.cloudapp.azure.com:9090/auth/login",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"studcare",
+						"koreacentral",
+						"cloudapp",
+						"azure",
+						"com"
 					],
-					"port": "8080",
+					"port": "9090",
 					"path": [
 						"auth",
 						"login"
@@ -37,11 +42,21 @@
 		{
 			"name": "Create Account",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzNDA0NTcxLCJleHAiOjE3MjM0OTA5NzF9.UHXEXMM4LqL-WA-4jUypPagEktPXNbkKek-QNku9Jq0",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"email\": \"example@example.com\",\n  \"password\": \"example123\",\n  \"role\": \"STUDENT\",\n  \"username\": \"example@example.com\",\n  \"isClassTeacher\": false\n}",
+					"raw": "{\n  \"email\": \"warden5@gmail.com\",\n  \"password\": \"123\",\n  \"role\": \"HOSTEL_MASTER\",\n  \"username\": \"firstFromAzureVM@example.com\",\n  \"classTeacher\": false\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -49,14 +64,18 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/auth/register",
+					"raw": "http://20.41.86.240:9090/account/create",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"20",
+						"41",
+						"86",
+						"240"
 					],
-					"port": "8080",
+					"port": "9090",
 					"path": [
-						"auth",
-						"register"
+						"account",
+						"create"
 					]
 				}
 			},
@@ -70,7 +89,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDg0OTg3LCJleHAiOjE3MjE1NzEzODd9.64aZ_7WuTCTjGdov9HxPbhC_4z9JKvKXqAc0Mffa9rY",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzMzA5MjIwLCJleHAiOjE3MjMzOTU2MjB9.SIj5WjFnDn5QQDKwqnwXfoYS1W0UiPHEkliRZip-DdQ",
 							"type": "string"
 						}
 					]
@@ -78,11 +97,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/user/profile/student5@gmail.com",
+					"raw": "localhost:9090/user/profile/student5@gmail.com",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "9090",
 					"path": [
 						"user",
 						"profile",
@@ -95,26 +114,28 @@
 		{
 			"name": "logout",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxMzI4MzQ0LCJleHAiOjE3MjEzMjk3ODR9.3T6kkrHBiXoZRQsQc22gk6U0Zqf8a43nb4XYpFABKyQ",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"email\": \"example@example.com\",\n  \"password\": \"example123\",\n  \"role\": \"STUDENT\",\n  \"username\": \"example@example.com\",\n  \"isClassTeacher\": false\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "localhost:8080/auth/register",
+					"raw": "localhost:8080/user/logout/example@example.com",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"auth",
-						"register"
+						"user",
+						"logout",
+						"example@example.com"
 					]
 				}
 			},
@@ -123,26 +144,28 @@
 		{
 			"name": "delete user",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxMzI1NDM1LCJleHAiOjE3MjEzMjY4NzV9.ev1l_RgytzX7-fotcKvCM4deh08aqGSeLzO0lJy4QK4",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"email\": \"example@example.com\",\n  \"password\": \"example123\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "localhost:8080/auth/login",
+					"raw": "localhost:8080/account/delete/1example@example.com",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"auth",
-						"login"
+						"account",
+						"delete",
+						"1example@example.com"
 					]
 				}
 			},
@@ -156,7 +179,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDc4NDE3LCJleHAiOjE3MjIxNjQ4MTd9.yKEEBDkNILcM8YWjDh12XkZVVBZUluDlop_kVqljABY",
 							"type": "string"
 						}
 					]
@@ -165,7 +188,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"className\": \"12D\",\n  \"classTeacher\": {\n    \"email\": \"cteacher12@gmail.com\"\n  }\n}",
+					"raw": "{\n    \"className\": \"3C\",\n    \"classTeacher\": {\n        \"email\": \"teacher3@gmail.com\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -194,7 +217,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
@@ -203,7 +226,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"className\": \"12D\",\n  \"classTeacher\": {\n    \"email\": \"cteacher12@gmail.com\"\n  }\n}",
+					"raw": "{\n  \"wardName\": \"AA\",\n  \"hostelMaster\": {\n    \"email\": \"warden1@gmail.com\"\n  }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -211,13 +234,13 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/class/create",
+					"raw": "localhost:8080/ward/create",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"class",
+						"ward",
 						"create"
 					]
 				}
@@ -232,7 +255,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
@@ -241,7 +264,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"className\": \"12D\",\n  \"classTeacher\": {\n    \"email\": \"cteacher12@gmail.com\"\n  }\n}",
+					"raw": "{\n  \"subjectName\": \"art\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -249,13 +272,13 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/class/create",
+					"raw": "localhost:8080/subject/create",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"class",
+						"subject",
 						"create"
 					]
 				}
@@ -270,7 +293,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
@@ -279,7 +302,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \n    \"studentEmails\": [\n      \"student6@example.com\",\n      \"student7@example.com\"\n    ]\n  \n}\n",
+					"raw": "{\n    \"studentEmails\": [\n      \"student9@gmail.com\",\n      \"student10@gmail.com\"\n    ]\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -287,14 +310,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/class/8D/add/students",
+					"raw": "localhost:8080/class/3C/add/students",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"class",
-						"8D",
+						"3C",
 						"add",
 						"students"
 					]
@@ -310,7 +333,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDg0OTg3LCJleHAiOjE3MjE1NzEzODd9.64aZ_7WuTCTjGdov9HxPbhC_4z9JKvKXqAc0Mffa9rY",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
@@ -319,7 +342,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \n    \"studentEmails\": [\n      \"student6@example.com\",\n      \"student7@example.com\"\n    ]\n  \n}\n",
+					"raw": "{\n  \n    \"studentEmails\": [\n      \"student8@gmail.com\",\n      \"student8@gmail.com\",\n      \"student10@gmail.com\"\n    ]\n  \n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -327,14 +350,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/ward/AA/add/students",
+					"raw": "localhost:8080/ward/BB/add/students",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"ward",
-						"AA",
+						"BB",
 						"add",
 						"students"
 					]
@@ -350,7 +373,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
@@ -359,7 +382,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \n    \"subjects\": [\n      \"maths\",\n      \"science\"\n    ]\n  \n}\n",
+					"raw": "{\n    \"subjects\": [\n      \"english\",\n      \"maths\",\n      \"science\",\n      \"sinhala\",\n      \"art\"\n    ]\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -367,14 +390,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/class/8D/add/subjects",
+					"raw": "localhost:8080/class/3C/add/subjects",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"class",
-						"8D",
+						"3C",
 						"add",
 						"subjects"
 					]
@@ -390,7 +413,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
@@ -399,7 +422,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"className\": \"12D\",\n  \"classTeacher\": {\n    \"email\": \"cteacher12@gmail.com\"\n  }\n}",
+					"raw": "{\n  \"subject\": \"art\",\n  \"teacher\": \"teacher5@gmail.com\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -407,14 +430,15 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/class/create",
+					"raw": "localhost:8080/subject/add/teacher",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"class",
-						"create"
+						"subject",
+						"add",
+						"teacher"
 					]
 				}
 			},
@@ -428,33 +452,25 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \n    \"subjects\": [\n      \"maths\",\n      \"science\"\n    ]\n  \n}\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "localhost:8080/class/8D/add/subjects",
+					"raw": "localhost:8080/class/3C/sinhala/assign/teacher4@gmail.com",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"class",
-						"8D",
-						"add",
-						"subjects"
+						"3C",
+						"sinhala",
+						"assign",
+						"teacher4@gmail.com"
 					]
 				}
 			},
@@ -468,7 +484,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzMzA5MjIwLCJleHAiOjE3MjMzOTU2MjB9.SIj5WjFnDn5QQDKwqnwXfoYS1W0UiPHEkliRZip-DdQ",
 							"type": "string"
 						}
 					]
@@ -477,7 +493,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"className\": \"12D\",\n  \"classTeacher\": {\n    \"email\": \"cteacher12@gmail.com\"\n  }\n}",
+					"raw": "{\n    \"subjectName\": \"maths\",\n    \"academicYear\": \"2024-2025\",\n    \"termNumber\": \"3\",\n    \"studentResults\": [\n        {\n            \"studentEmail\": \"student5@gmail.com\",\n            \"marks\": \"00\",\n            \"teacherNote\": \"Overall bad performance by the class\",\n            \"grade\": \"F\"\n        },\n        {\n            \"studentEmail\": \"student3@gmail.com\",\n            \"marks\": \"66\",\n            \"teacherNote\": \"Overall good performance by the class\",\n            \"grade\": \"B\"\n        },\n        {\n            \"studentEmail\": \"student1@gmail.com\",\n            \"marks\": \"33\",\n            \"teacherNote\": \"Overall good performance by the class\",\n            \"grade\": \"S\"\n        },\n        {\n            \"studentEmail\": \"student4@gmail.com\",\n            \"marks\": \"100\",\n            \"teacherNote\": \"Overall good performance by the class\",\n            \"grade\": \"A\"\n        },\n        {\n            \"studentEmail\": \"student2@gmail.com\",\n            \"marks\": \"100\",\n            \"teacherNote\": \"Overall good performance by the class\",\n            \"grade\": \"A\"\n        }\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -485,14 +501,16 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/class/create",
+					"raw": "localhost:9090/teacher/teacher1@gmail.com/subject/result",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "9090",
 					"path": [
-						"class",
-						"create"
+						"teacher",
+						"teacher1@gmail.com",
+						"subject",
+						"result"
 					]
 				}
 			},
@@ -506,7 +524,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
@@ -515,7 +533,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"className\": \"12D\",\n  \"classTeacher\": {\n    \"email\": \"cteacher12@gmail.com\"\n  }\n}",
+					"raw": "{\n  \"student\": \"student1@gmail.com\",\n  \"teacher\": \"teacher1@gmail.com\",\n  \"term\": \"3\",\n  \"academicYear\": \"2023-2024\",\n  \"classTeacherNote\": \"Kamal has shown significant improvement in his overall performance this term. He has been particularly active in class discussions and has demonstrated a strong grasp of the material. Keep up the good work!\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -523,14 +541,15 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/class/create",
+					"raw": "localhost:8080/student/term/note",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"class",
-						"create"
+						"student",
+						"term",
+						"note"
 					]
 				}
 			},
@@ -544,7 +563,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNjY2Mzc5LCJleHAiOjE3MjE3NTI3Nzl9.BA5-d6_edAHpQNKAneIDNxYEgeJrJvwKX5TVZ8_ZfyM",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzMzA5MjIwLCJleHAiOjE3MjMzOTU2MjB9.SIj5WjFnDn5QQDKwqnwXfoYS1W0UiPHEkliRZip-DdQ",
 							"type": "string"
 						}
 					]
@@ -553,7 +572,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"evaluationMonth\": \"02\",\n    \"evaluationYear\": \"2023\",\n    \"behavioralData\": \"good\",\n    \"extraNote\": \"good again\",\n    \"extracurricularActivities\": \"very good\",\n    \"healthData\": \"very good again\",\n    \"wardName\": \"AA\"\n}",
+					"raw": "{\n    \"evaluationMonth\": \"01\",\n    \"evaluationYear\": \"2023\",\n    \"behavioralData\": \"very good\",\n    \"extraNote\": \"very good again\",\n    \"extracurricularActivities\": \"not very good\",\n    \"healthData\": \" good again\",\n    \"wardName\": \"AA\",\n    \"sportData\": \"cricket\",\n    \"extracurricularActivityGrade\": \"EXCELLENT\",\n    \"sportGrade\": \"SATISFACTORY\"\n\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -561,16 +580,16 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/hostelmaster/warden1@gmail.com/student/student4@gmail.com/evaluation",
+					"raw": "localhost:9090/hostelmaster/warden1@gmail.com/student/student1@gmail.com/evaluation",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "9090",
 					"path": [
 						"hostelmaster",
 						"warden1@gmail.com",
 						"student",
-						"student4@gmail.com",
+						"student1@gmail.com",
 						"evaluation"
 					]
 				}
@@ -579,21 +598,18 @@
 		},
 		{
 			"name": "get class term results",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNTU3MDg5LCJleHAiOjE3MjE2NDM0ODl9.MSzgPKm7e5fhjjd9_lqBquyd4X9ywtgnyZI2Su5_cKI",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
 				},
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -605,15 +621,16 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/class/1A/results",
+					"raw": "localhost:8080/class/3C/term/result",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"class",
-						"1A",
-						"results"
+						"3C",
+						"term",
+						"result"
 					]
 				}
 			},
@@ -630,7 +647,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNjY2Mzc5LCJleHAiOjE3MjE3NTI3Nzl9.BA5-d6_edAHpQNKAneIDNxYEgeJrJvwKX5TVZ8_ZfyM",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzMzA5MjIwLCJleHAiOjE3MjMzOTU2MjB9.SIj5WjFnDn5QQDKwqnwXfoYS1W0UiPHEkliRZip-DdQ",
 							"type": "string"
 						}
 					]
@@ -639,7 +656,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"months\":[\n        \"11\",\n        \"22\"\n    ]\n}",
+					"raw": "{\n    \"months\":[\n        \"01\",\n        \"02\",\n        \"03\",\n        \"04\",\n        \"05\",\n        \"06\"\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -647,11 +664,15 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/student/student1@gmail.com/evaluations",
+					"raw": "http://20.41.86.240:9090/student/student1@gmail.com/evaluations",
+					"protocol": "http",
 					"host": [
-						"localhost"
+						"20",
+						"41",
+						"86",
+						"240"
 					],
-					"port": "8080",
+					"port": "9090",
 					"path": [
 						"student",
 						"student1@gmail.com",
@@ -669,7 +690,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
@@ -766,15 +787,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/subject/maths/teachers",
+					"raw": "localhost:8080/teacher/cteacher11@gmail.com/subjects",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"subject",
-						"maths",
-						"teachers"
+						"teacher",
+						"cteacher11@gmail.com",
+						"subjects"
 					]
 				}
 			},
@@ -796,14 +817,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/class/8D/students",
+					"raw": "localhost:8080/ward/AA/students",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"class",
-						"8D",
+						"ward",
+						"AA",
 						"students"
 					]
 				}
@@ -818,7 +839,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDg0OTg3LCJleHAiOjE3MjE1NzEzODd9.64aZ_7WuTCTjGdov9HxPbhC_4z9JKvKXqAc0Mffa9rY",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
@@ -826,14 +847,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/class/8D/students",
+					"raw": "localhost:8080/class/11/students",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"class",
-						"8D",
+						"11",
 						"students"
 					]
 				}
@@ -886,15 +907,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/class/8D/students",
+					"raw": "localhost:8080/class/cteacher10@gmail.com/maths",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"class",
-						"8D",
-						"students"
+						"cteacher10@gmail.com",
+						"maths"
 					]
 				}
 			},
@@ -908,7 +929,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNDY4OTUzLCJleHAiOjE3MjE1NTUzNTN9.3hHMLrvTqjovY2aVfl8QWJkE5CMCAjeGPUW9VIoAHgc",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNTU3MDg5LCJleHAiOjE3MjE2NDM0ODl9.MSzgPKm7e5fhjjd9_lqBquyd4X9ywtgnyZI2Su5_cKI",
 							"type": "string"
 						}
 					]
@@ -916,14 +937,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/class/8D/details",
+					"raw": "localhost:8080/class/1A/details",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"class",
-						"8D",
+						"1A",
 						"details"
 					]
 				}
@@ -941,7 +962,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNTU3MDg5LCJleHAiOjE3MjE2NDM0ODl9.MSzgPKm7e5fhjjd9_lqBquyd4X9ywtgnyZI2Su5_cKI",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
@@ -958,14 +979,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/class/1A/results",
+					"raw": "localhost:8080/class/11/results",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"class",
-						"1A",
+						"11",
 						"results"
 					]
 				}
@@ -983,7 +1004,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNTU3MDg5LCJleHAiOjE3MjE2NDM0ODl9.MSzgPKm7e5fhjjd9_lqBquyd4X9ywtgnyZI2Su5_cKI",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
@@ -992,7 +1013,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"academicYear\": \"2023-2024\",\n    \"term\": \"2\"\n}",
+					"raw": "{\n    \"academicYear\": \"2023-2024\",\n    \"term\": \"1\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1000,14 +1021,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/student/student5@gmail.com/term/results",
+					"raw": "localhost:8080/student/student4@gmail.com/term/results",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"student",
-						"student5@gmail.com",
+						"student4@gmail.com",
 						"term",
 						"results"
 					]
@@ -1026,7 +1047,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNTU3MDg5LCJleHAiOjE3MjE2NDM0ODl9.MSzgPKm7e5fhjjd9_lqBquyd4X9ywtgnyZI2Su5_cKI",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
 							"type": "string"
 						}
 					]
@@ -1035,7 +1056,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"academicYear\": \"2023-2024\",\n    \"term\": \"2\"\n}",
+					"raw": "{\n    \"academicYear\": \"2023-2024\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1043,14 +1064,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/student/student5@gmail.com/year/results",
+					"raw": "localhost:8080/student/student4@gmail.com/year/results",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"student",
-						"student5@gmail.com",
+						"student4@gmail.com",
 						"year",
 						"results"
 					]
@@ -1060,6 +1081,41 @@
 		},
 		{
 			"name": "get student results",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzMzA5MjIwLCJleHAiOjE3MjMzOTU2MjB9.SIj5WjFnDn5QQDKwqnwXfoYS1W0UiPHEkliRZip-DdQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://20.41.86.240:9090/student/student5@gmail.com/all/results",
+					"protocol": "http",
+					"host": [
+						"20",
+						"41",
+						"86",
+						"240"
+					],
+					"port": "9090",
+					"path": [
+						"student",
+						"student5@gmail.com",
+						"all",
+						"results"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getStudentSuggestions",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -1069,7 +1125,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIxNTU3MDg5LCJleHAiOjE3MjE2NDM0ODl9.MSzgPKm7e5fhjjd9_lqBquyd4X9ywtgnyZI2Su5_cKI",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzMzA5MjIwLCJleHAiOjE3MjMzOTU2MjB9.SIj5WjFnDn5QQDKwqnwXfoYS1W0UiPHEkliRZip-DdQ",
 							"type": "string"
 						}
 					]
@@ -1078,7 +1134,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"academicYear\": \"2023-2024\",\n    \"term\": \"2\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1086,16 +1142,15 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/student/student5@gmail.com/year/results",
+					"raw": "localhost:9090/student/student1@gmail.com/suggestions",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "9090",
 					"path": [
 						"student",
-						"student5@gmail.com",
-						"year",
-						"results"
+						"student1@gmail.com",
+						"suggestions"
 					]
 				}
 			},
@@ -1117,14 +1172,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/class/8D/details",
+					"raw": "localhost:8080/ward/AA/details",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"class",
-						"8D",
+						"ward",
+						"AA",
 						"details"
 					]
 				}
@@ -1147,15 +1202,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/class/8D/details",
+					"raw": "localhost:8080/hostelmaster/warden1@gmail.com/ward",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"class",
-						"8D",
-						"details"
+						"hostelmaster",
+						"warden1@gmail.com",
+						"ward"
 					]
 				}
 			},
@@ -1163,6 +1218,9 @@
 		},
 		{
 			"name": "get users",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -1174,7 +1232,7 @@
 						}
 					]
 				},
-				"method": "POST",
+				"method": "GET",
 				"header": [],
 				"body": {
 					"mode": "raw",
