@@ -638,21 +638,18 @@
 		},
 		{
 			"name": "get evaluations of hostel students",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzMzA5MjIwLCJleHAiOjE3MjMzOTU2MjB9.SIj5WjFnDn5QQDKwqnwXfoYS1W0UiPHEkliRZip-DdQ",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzNDk1MDY5LCJleHAiOjE3MjM1ODE0Njl9.ijXXVWZIMidK5hTMgILicyDrBoIV8JX1mnD6Q8t11E0",
 							"type": "string"
 						}
 					]
 				},
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -664,13 +661,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://20.41.86.240:9090/student/student1@gmail.com/evaluations",
+					"raw": "http://localhost:9090/student/student1@gmail.com/evaluations",
 					"protocol": "http",
 					"host": [
-						"20",
-						"41",
-						"86",
-						"240"
+						"localhost"
 					],
 					"port": "9090",
 					"path": [
@@ -953,21 +947,18 @@
 		},
 		{
 			"name": "get class results",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzNDk1MDY5LCJleHAiOjE3MjM1ODE0Njl9.ijXXVWZIMidK5hTMgILicyDrBoIV8JX1mnD6Q8t11E0",
 							"type": "string"
 						}
 					]
 				},
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -979,11 +970,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/class/11/results",
+					"raw": "localhost:9090/class/11/results",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "9090",
 					"path": [
 						"class",
 						"11",
@@ -995,21 +986,18 @@
 		},
 		{
 			"name": "get student term results",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzNDk1MDY5LCJleHAiOjE3MjM1ODE0Njl9.ijXXVWZIMidK5hTMgILicyDrBoIV8JX1mnD6Q8t11E0",
 							"type": "string"
 						}
 					]
 				},
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -1021,11 +1009,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/student/student4@gmail.com/term/results",
+					"raw": "localhost:9090/student/student4@gmail.com/term/results",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "9090",
 					"path": [
 						"student",
 						"student4@gmail.com",
@@ -1038,21 +1026,18 @@
 		},
 		{
 			"name": "get student year results",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyMDY2MjkyLCJleHAiOjE3MjIxNTI2OTJ9.M4h6Y_EQUFUwCeMjW16kieDActCgk60hwy_k1AErBi0",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzNDk1MDY5LCJleHAiOjE3MjM1ODE0Njl9.ijXXVWZIMidK5hTMgILicyDrBoIV8JX1mnD6Q8t11E0",
 							"type": "string"
 						}
 					]
 				},
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -1064,11 +1049,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/student/student4@gmail.com/year/results",
+					"raw": "localhost:9090/student/student4@gmail.com/year/results",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "9090",
 					"path": [
 						"student",
 						"student4@gmail.com",
@@ -1252,6 +1237,36 @@
 					"path": [
 						"user",
 						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get prediction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIzNDk1MDY5LCJleHAiOjE3MjM1ODE0Njl9.ijXXVWZIMidK5hTMgILicyDrBoIV8JX1mnD6Q8t11E0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9090/student/student1@gmail.com/suggestions",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"student",
+						"student1@gmail.com",
+						"suggestions"
 					]
 				}
 			},

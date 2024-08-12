@@ -61,12 +61,11 @@ public class UserController {
 	@GetMapping("/all")
 	public ResponseEntity<Object> getAllUsersByRole(
 			@RequestHeader Map<String, String> headers,
-			@RequestParam Map<String, String> queryParams,
-			@RequestBody String requestBody
+			@RequestParam Map<String, String> queryParams
 	) {
 		try {
 			log.info("AccountController.getAllUsersByRole()[GET] process initiated");
-			HttpRequestData httpRequestData = new HttpRequestData( headers, queryParams, requestBody);
+			HttpRequestData httpRequestData = new HttpRequestData(headers, queryParams);
 			return userService.getAllUsersByRole(httpRequestData);
 		} catch (Exception exception) {
 			log.error("AccountController.getAllUsersByRole()[GET] unexpected error occurred", exception);

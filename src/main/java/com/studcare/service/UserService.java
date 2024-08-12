@@ -31,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -184,23 +185,26 @@ public class UserService {
 	public ResponseDTO getUsers(String userRole) throws StudCareValidationException {
 		ResponseDTO responseDTO = new ResponseDTO();
 		AllUsersDTO allUsersDTO = new AllUsersDTO();
-		UserRole role;
-		try {
-			role = UserRole.valueOf(userRole.toUpperCase());
-		} catch (IllegalArgumentException e) {
-			responseDTO.setResponseCode(Status.FAILURE);
-			responseDTO.setMessage("Invalid user role: " + userRole);
-			return responseDTO;
-		}
-		Optional<List<User>> userOptional = userRepository.findByRole(role);
-		if (userOptional.isEmpty()) {
-			responseDTO.setResponseCode(Status.FAILURE);
-			responseDTO.setMessage("No user with role: " + userRole);
+		List<User> users;
+		if (userRole.equalsIgnoreCase("ALL")) {
+			users = userRepository.findAll();
 		} else {
-			List<User> users = userOptional.get();
+			try {
+				UserRole role = UserRole.valueOf(userRole.toUpperCase());
+				users = userRepository.findByRole(role).orElse(Collections.emptyList());
+			} catch (IllegalArgumentException e) {
+				responseDTO.setResponseCode(Status.FAILURE);
+				responseDTO.setMessage("Invalid user role: " + userRole);
+				return responseDTO;
+			}
+		}
+		if (users.isEmpty()) {
+			responseDTO.setResponseCode(Status.FAILURE);
+			responseDTO.setMessage("No users found with role: " + userRole);
+		} else {
 			allUsersDTO.setUserDTOS(users.stream().map(userAdapter::adapt).collect(Collectors.toList()));
 			responseDTO.setResponseCode(Status.SUCCESS);
-			responseDTO.setMessage("User profile retrieved successfully");
+			responseDTO.setMessage("User profiles retrieved successfully");
 			responseDTO.setData(allUsersDTO.getUserDTOS());
 		}
 		return responseDTO;

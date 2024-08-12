@@ -31,4 +31,9 @@ public class HttpRequestData {
 		this.headers = headers;
 		this.queryParams = queryParams;
 	}
+
+	public HttpRequestData(Map<String, String> headers, Map<String, String> queryParams) {
+		this.headers = headers;
+		this.queryParams = queryParams;
+	}
 }

@@ -21,28 +21,28 @@ public class StudentController {
 	@Autowired
 	private StudentService studentService;
 	
-	@GetMapping("/{student}/term/results")
+	@PostMapping("/{student}/term/results")
 	public ResponseEntity<Object> getTermResults(
 			@PathVariable String student,
 			@RequestBody String requestBody) {
 		try {
-			log.info("StudentService.getTermResults()[GET] process initiated for student name: {}", student);
+			log.info("StudentService.getTermResults()[POST] process initiated for student name: {}", student);
 			return studentService.getStudentResults(student, requestBody);
 		} catch (Exception exception) {
-			log.error("StudentService.getTermResults()[GET] unexpected error occurred", exception);
+			log.error("StudentService.getTermResults()[POST] unexpected error occurred", exception);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	@GetMapping("/{student}/year/results")
+	@PostMapping("/{student}/year/results")
 	public ResponseEntity<Object> getYearResults(
 			@PathVariable String student,
 			@RequestBody String requestBody) {
 		try {
-			log.info("StudentService.getYearResults()[GET] process initiated for student name: {}", student);
+			log.info("StudentService.getYearResults()[POST] process initiated for student name: {}", student);
 			return studentService.getStudentYearResults(student, requestBody);
 		} catch (Exception exception) {
-			log.error("StudentService.getYearResults()[GET] unexpected error occurred", exception);
+			log.error("StudentService.getYearResults()[POST] unexpected error occurred", exception);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -58,7 +58,7 @@ public class StudentController {
 		}
 	}
 
-	@GetMapping("/{studentId}/evaluations")
+	@PostMapping("/{studentId}/evaluations")
 	public ResponseEntity<Object> getMonthlyEvaluations(
 			@PathVariable String studentId,
 			@RequestBody MonthlyEvaluationsDTO requestDTO) {

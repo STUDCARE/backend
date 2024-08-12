@@ -16,11 +16,8 @@ public class GetUsersAdapter {
 	private ObjectMapper objectMapper;
 
 	public AllUsersRequestDTO adapt(HttpRequestData httpRequestData) {
-		try {
-			return objectMapper.readValue(httpRequestData.getRequestBody(), AllUsersRequestDTO.class);
-		} catch (JsonProcessingException exception) {
-			log.error("GetUsersAdapter.adapt(): map user register request to user object failed", exception);
-			throw new StudCareRuntimeException("get role from request body object failed");
-		}
+		AllUsersRequestDTO allUsersRequestDTO = new AllUsersRequestDTO();
+		allUsersRequestDTO.setUserRole(httpRequestData.getQueryParams().get("role"));
+		return allUsersRequestDTO;
 	}
 }

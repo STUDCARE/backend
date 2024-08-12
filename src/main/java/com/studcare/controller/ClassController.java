@@ -120,16 +120,16 @@ public class ClassController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	@GetMapping("/{className}/results")
+	@PostMapping("/{className}/results")
 	public ResponseEntity<Object> getClassResults(
 			@PathVariable String className,
 			@RequestHeader Map<String, String> headers,
 			@RequestBody String requestBody) {
 		try {
-			log.info("ClassController.getClassResults()[GET] process initiated for class name: {}", className);
+			log.info("ClassController.getClassResults()[POST] process initiated for class name: {}", className);
 			return classService.getClassResults(className, requestBody);
 		} catch (Exception exception) {
-			log.error("ClassController.getClassResults()[GET] unexpected error occurred", exception);
+			log.error("ClassController.getClassResults()[POST] unexpected error occurred", exception);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
