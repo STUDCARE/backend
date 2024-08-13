@@ -120,33 +120,33 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		return responseEntity;
 	}
 
-	@Transactional
-	private ResponseDTO addClass(ClassRequestDTO classRequestDTO) {
+	@Transactional private ResponseDTO addClass(ClassRequestDTO classRequestDTO) {
 		ResponseDTO responseDTO = new ResponseDTO();
 		User classTeacher = userRepository.findByEmail(classRequestDTO.getSchoolClassDTO().getClassTeacher().getEmail())
 				.orElseThrow(() -> new StudCareValidationException("Class teacher not found"));
-		if (Boolean.TRUE.equals(classTeacher.getIsClassTeacher())){
+		if (Boolean.TRUE.equals(classTeacher.getIsClassTeacher())) {
 			log.error("User is already a class teacher", classTeacher.getEmail());
 			responseDTO.setResponseCode(Status.FAILURE);
 			responseDTO.setMessage("User is already a class teacher");
-		}
-		SchoolClassDTO schoolClassDTO = classRequestDTO.getSchoolClassDTO();
-		UserDTO classTeacherDTO = userAdapter.adapt(classTeacher);
-		schoolClassDTO.setClassTeacher(classTeacherDTO);
-		SchoolClass schoolClass = schoolClassAdapter.adapt(schoolClassDTO);
-		if (schoolClassRepository.findByClassName(schoolClass.getClassName()).isPresent()) {
-			responseDTO.setResponseCode(Status.FAILURE);
-			responseDTO.setMessage("Class already exists with name: " + schoolClass.getClassName());
 		} else {
-			try {
-				schoolClassRepository.save(schoolClass);
-				schoolClass.getClassTeacher().setIsClassTeacher(true);
-				userRepository.save(schoolClass.getClassTeacher());
-				responseDTO.setResponseCode(Status.SUCCESS);
-				responseDTO.setMessage("Class created successfully for " + schoolClass.getClassName());
-			} catch (Exception exception) {
-				log.error("ClassService.addClass error occurred ", exception);
-				throw new StudCareDataException("Failed saving class to the database");
+			SchoolClassDTO schoolClassDTO = classRequestDTO.getSchoolClassDTO();
+			UserDTO classTeacherDTO = userAdapter.adapt(classTeacher);
+			schoolClassDTO.setClassTeacher(classTeacherDTO);
+			SchoolClass schoolClass = schoolClassAdapter.adapt(schoolClassDTO);
+			if (schoolClassRepository.findByClassName(schoolClass.getClassName()).isPresent()) {
+				responseDTO.setResponseCode(Status.FAILURE);
+				responseDTO.setMessage("Class already exists with name: " + schoolClass.getClassName());
+			} else {
+				try {
+					schoolClassRepository.save(schoolClass);
+					schoolClass.getClassTeacher().setIsClassTeacher(true);
+					userRepository.save(schoolClass.getClassTeacher());
+					responseDTO.setResponseCode(Status.SUCCESS);
+					responseDTO.setMessage("Class created successfully for " + schoolClass.getClassName());
+				} catch (Exception exception) {
+					log.error("ClassService.addClass error occurred ", exception);
+					throw new StudCareDataException("Failed saving class to the database");
+				}
 			}
 		}
 		return responseDTO;
@@ -544,4 +544,28 @@ import static com.studcare.util.CommonUtils.createResponseEntity;
 		termResult.setClassRank(String.valueOf(rank));
 		termResultRepository.save(termResult);
 	}
+
+	@Transactional
+	public ResponseEntity<Object> getAllClasses() {
+		log.info("ClassService.getAllClasses() initiated");
+		ResponseEntity<Object> responseEntity;
+		HttpResponseData httpResponseData = new HttpResponseData();
+		try {
+			List<SchoolClass> classes = schoolClassRepository.findAll();
+			ResponseDTO responseDTO = new ResponseDTO();
+			responseDTO.setResponseCode(Status.SUCCESS);
+			responseDTO.setMessage("All classes retrieved successfully");
+			responseDTO.setData(classes);
+			httpResponseData = classResponseAdapter.adapt(responseDTO);
+			responseEntity = createResponseEntity(httpResponseData);
+			log.info("ClassService.getAllClasses() finished successfully");
+		} catch (Exception exception) {
+			httpResponseData.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			httpResponseData.setResponseBody(exception.getMessage());
+			responseEntity = createResponseEntity(httpResponseData);
+			log.error("ClassService.getAllClasses() an error occurred", exception);
+		}
+		return responseEntity;
+	}
+
 }

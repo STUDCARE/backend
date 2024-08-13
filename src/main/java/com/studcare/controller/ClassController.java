@@ -147,4 +147,14 @@ public class ClassController {
 		}
 	}
 
+	@GetMapping("/all")
+	public ResponseEntity<Object> getAllClasses() {
+		try {
+			log.info("ClassController.getAllClasses()[GET] process initiated");
+			return classService.getAllClasses();
+		} catch (Exception exception) {
+			log.error("ClassController.getAllClasses()[GET] unexpected error occurred", exception);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

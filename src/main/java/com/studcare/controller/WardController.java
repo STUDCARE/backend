@@ -71,4 +71,15 @@ public class WardController {
 		}
 	}
 
+	@GetMapping("/all")
+	public ResponseEntity<Object> getAllWards() {
+		try {
+			log.info("WardController.getAllWards()[GET] process initiated");
+			return wardService.getAllWards();
+		} catch (Exception exception) {
+			log.error("WardController.getAllWards()[GET] unexpected error occurred", exception);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }

@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Collections;
@@ -231,4 +232,28 @@ public class WardService {
 		dto.setUserDTO(userAdapter.adapt(student.getUser()));
 		return dto;
 	}
+
+	@Transactional
+	public ResponseEntity<Object> getAllWards() {
+		log.info("WardService.getAllWards() initiated");
+		ResponseEntity<Object> responseEntity;
+		HttpResponseData httpResponseData = new HttpResponseData();
+		try {
+			List<Ward> wards = wardRepository.findAll();
+			ResponseDTO responseDTO = new ResponseDTO();
+			responseDTO.setResponseCode(Status.SUCCESS);
+			responseDTO.setMessage("All wards retrieved successfully");
+			responseDTO.setData(wards);
+			httpResponseData = responseAdapter.adapt(responseDTO);
+			responseEntity = createResponseEntity(httpResponseData);
+			log.info("WardService.getAllWards() finished successfully");
+		} catch (Exception exception) {
+			httpResponseData.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+			httpResponseData.setResponseBody(exception.getMessage());
+			responseEntity = createResponseEntity(httpResponseData);
+			log.error("WardService.getAllWards() an error occurred", exception);
+		}
+		return responseEntity;
+	}
+
 }
