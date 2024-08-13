@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -26,26 +29,15 @@ class GetUsersAdapterTest {
 	@Test
 	void adaptSuccess() throws JsonProcessingException {
 		HttpRequestData httpRequestData = new HttpRequestData();
-		String requestBody = "{\"role\":\"admin\"}";
-		httpRequestData.setRequestBody(requestBody);
+		Map<String, String> queryParams = new HashMap<>();
+		queryParams.put("role","admin");
+		httpRequestData.setQueryParams(queryParams);
 
 		AllUsersRequestDTO allUsersRequestDTO = new AllUsersRequestDTO();
 		allUsersRequestDTO.setUserRole("admin");
 
-		when(objectMapper.readValue(requestBody, AllUsersRequestDTO.class)).thenReturn(allUsersRequestDTO);
-
 		AllUsersRequestDTO result = getUsersAdapter.adapt(httpRequestData);
 
 		assertEquals("admin", result.getUserRole());
-	}
-
-	@Test
-	void adaptJsonProcessingException() throws JsonProcessingException {
-		HttpRequestData httpRequestData = new HttpRequestData();
-		httpRequestData.setRequestBody("invalid-json");
-
-		when(objectMapper.readValue("invalid-json", AllUsersRequestDTO.class)).thenThrow(new JsonProcessingException("error") {});
-
-		assertThrows(StudCareRuntimeException.class, () -> getUsersAdapter.adapt(httpRequestData));
 	}
 }

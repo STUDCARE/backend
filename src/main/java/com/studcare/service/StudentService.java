@@ -44,6 +44,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -99,7 +100,9 @@ public class StudentService {
 					subjectResultDTO.setMarks(subjectResult.getMarks());
 					subjectResultDTO.setGrade(subjectResult.getGrade());
 					subjectResultDTO.setTeacherNote(subjectResult.getTeacherNote());
-					subjectResultDTO.setTeacherName(subjectResult.getTeacher().getEmail());
+					if(!ObjectUtils.isEmpty(subjectResult.getTeacher())){
+						subjectResultDTO.setTeacherName(subjectResult.getTeacher().getEmail());
+					}
 					subjectResultDTOs.add(subjectResultDTO);
 				}
 			}
@@ -156,7 +159,9 @@ public class StudentService {
 					subjectResultDTO.setMarks(subjectResult.getMarks());
 					subjectResultDTO.setGrade(subjectResult.getGrade());
 					subjectResultDTO.setTeacherNote(subjectResult.getTeacherNote());
-					subjectResultDTO.setTeacherName(subjectResult.getTeacher().getEmail());
+					if(!ObjectUtils.isEmpty(subjectResult.getTeacher())){
+						subjectResultDTO.setTeacherName(subjectResult.getTeacher().getEmail());
+					}
 					subjectResultDTOs.add(subjectResultDTO);
 				}
 				termResultsDTO.setSubjectResults(subjectResultDTOs);
@@ -218,7 +223,9 @@ public class StudentService {
 					subjectResultDTO.setMarks(subjectResult.getMarks());
 					subjectResultDTO.setGrade(subjectResult.getGrade());
 					subjectResultDTO.setTeacherNote(subjectResult.getTeacherNote());
-					subjectResultDTO.setTeacherName(subjectResult.getTeacher().getEmail());
+					if(!ObjectUtils.isEmpty(subjectResult.getTeacher())){
+						subjectResultDTO.setTeacherName(subjectResult.getTeacher().getEmail());
+					}
 					subjectResultDTOs.add(subjectResultDTO);
 				}
 				termResultsDTO.setSubjectResults(subjectResultDTOs);
@@ -337,7 +344,7 @@ public class StudentService {
 			}
 			for (Map.Entry<String, List<Double>> entry : subjectMarks.entrySet()) {
 				double average = entry.getValue().stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-				performanceData.put(entry.getKey(), String.format("%.2f", average));
+				performanceData.put(entry.getKey().toLowerCase(), String.format("%.2f", average));
 			}
 			List<MonthlyEvaluation> evaluations = monthlyEvaluationRepository.findByStudent(student);
 			MonthlyEvaluationResponseDTO monthlyEvaluationResponseDTO = monthlyEvaluationResponseAdapter.adapt(evaluations, null, null);
@@ -350,9 +357,15 @@ public class StudentService {
 				}
 			}
 			GradingScale mostFrequentSportGrade = getMostFrequentGrade(sportGradeCount);
+			if(ObjectUtils.isEmpty(mostFrequentSportGrade)){
+				mostFrequentSportGrade = GradingScale.ABSENT;
+			}
 			GradingScale mostFrequentExtracurricularGrade = getMostFrequentGrade(extracurricularGradeCount);
-			performanceData.put("Sports", mostFrequentSportGrade.toString());
-			performanceData.put("Extracurricular", mostFrequentExtracurricularGrade.toString());
+			if(ObjectUtils.isEmpty(mostFrequentExtracurricularGrade)){
+				mostFrequentExtracurricularGrade = GradingScale.ABSENT;
+			}
+			performanceData.put("sports", mostFrequentSportGrade.toString());
+			performanceData.put("extracurricular", mostFrequentExtracurricularGrade.toString());
 
 			JsonNode studentSuggestion= getStudentSuggestionsFromModel(performanceData);
 
@@ -385,7 +398,7 @@ public class StudentService {
 
 			ResponseEntity<String> response = restTemplate.postForEntity(getStudentSuggestionsUrl, entity, String.class);
 
-			if (response.getStatusCode() == HttpStatus.OK) {
+			if (response.getStatusCode().equals(HttpStatus.OK) ) {
 				return objectMapper.readTree(response.getBody());
 			} else {
 				log.error("ML service returned non-OK status: {}", response.getStatusCode());

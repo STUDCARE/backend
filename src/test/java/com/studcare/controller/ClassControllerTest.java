@@ -226,7 +226,7 @@ class ClassControllerTest {
 		String requestBody = "{\"academicYear\":\"2023\",\"term\":\"1\"}";
 		when(classService.getClassResults(any(), any())).thenThrow(new RuntimeException("Simulated exception"));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/class/{className}/results", className)
+		mockMvc.perform(MockMvcRequestBuilders.post("/class/{className}/results", className)
 						.header("Header1", "Value1")
 						.content(requestBody)
 						.contentType(MediaType.APPLICATION_JSON))

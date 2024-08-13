@@ -344,7 +344,7 @@ class UserServiceTest {
 		ResponseDTO response = userService.getUsers(userRole);
 
 		assertEquals(Status.SUCCESS, response.getResponseCode());
-		assertEquals("User profile retrieved successfully", response.getMessage());
+		assertEquals("User profiles retrieved successfully", response.getMessage());
 		assertNotNull(response.getData());
 	}
 
@@ -367,6 +367,6 @@ class UserServiceTest {
 		ResponseDTO response = userService.getUsers(userRole);
 
 		assertEquals(Status.FAILURE, response.getResponseCode());
-		assertEquals("No user with role: " + userRole, response.getMessage());
+		assertEquals("No users found with role: " + userRole, response.getMessage());
 	}
 }

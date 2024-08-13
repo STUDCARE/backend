@@ -123,4 +123,20 @@ class WardControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/ward/{wardName}/details", wardName))
 				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
 	}
+
+	@Test
+	void testGetAllWards() throws Exception {
+		when(wardService.getAllWards()).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/ward/all"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	void testGetAllWardsFailure() throws Exception {
+		when(wardService.getAllWards()).thenThrow(new RuntimeException("Simulated exception"));
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/ward/all"))
+				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
+	}
 }

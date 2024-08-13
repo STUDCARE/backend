@@ -41,7 +41,7 @@ class StudentControllerTest {
 		String requestBody = "{\"term\":\"1\"}";
 		when(studentService.getStudentResults(any(), any())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/student/{student}/term/results", student)
+		mockMvc.perform(MockMvcRequestBuilders.post("/student/{student}/term/results", student)
 						.content(requestBody)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk());
@@ -53,7 +53,7 @@ class StudentControllerTest {
 		String requestBody = "{\"year\":\"2023\"}";
 		when(studentService.getStudentYearResults(any(), any())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/student/{student}/year/results", student)
+		mockMvc.perform(MockMvcRequestBuilders.post("/student/{student}/year/results", student)
 						.content(requestBody)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk());
@@ -76,7 +76,7 @@ class StudentControllerTest {
 		String requestBody = new ObjectMapper().writeValueAsString(requestDTO);
 		when(studentService.getMonthlyEvaluations(any(), any())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/student/{studentId}/evaluations", studentId)
+		mockMvc.perform(MockMvcRequestBuilders.post("/student/{studentId}/evaluations", studentId)
 						.content(requestBody)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk());
@@ -101,7 +101,7 @@ class StudentControllerTest {
 		String requestBody = "{\"term\":\"1\"}";
 		when(studentService.getStudentResults(any(), any())).thenThrow(new RuntimeException("Simulated exception"));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/student/{student}/term/results", student)
+		mockMvc.perform(MockMvcRequestBuilders.post("/student/{student}/term/results", student)
 						.content(requestBody)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
@@ -113,7 +113,7 @@ class StudentControllerTest {
 		String requestBody = "{\"year\":\"2023\"}";
 		when(studentService.getStudentYearResults(any(), any())).thenThrow(new RuntimeException("Simulated exception"));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/student/{student}/year/results", student)
+		mockMvc.perform(MockMvcRequestBuilders.post("/student/{student}/year/results", student)
 						.content(requestBody)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
@@ -136,7 +136,7 @@ class StudentControllerTest {
 		String requestBody = new ObjectMapper().writeValueAsString(requestDTO);
 		when(studentService.getMonthlyEvaluations(any(), any())).thenThrow(new RuntimeException("Simulated exception"));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/student/{studentId}/evaluations", studentId)
+		mockMvc.perform(MockMvcRequestBuilders.post("/student/{studentId}/evaluations", studentId)
 						.content(requestBody)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isInternalServerError());
