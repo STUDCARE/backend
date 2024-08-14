@@ -352,8 +352,12 @@ public class StudentService {
 			EnumMap<GradingScale, Integer> extracurricularGradeCount = new EnumMap<>(GradingScale.class);
 			for (List<MonthlyEvaluationData> monthlyData : monthlyEvaluationResponseDTO.getEvaluations().values()) {
 				for (MonthlyEvaluationData data : monthlyData) {
-					sportGradeCount.merge(data.getSportGrade(), 1, Integer::sum);
-					extracurricularGradeCount.merge(data.getExtracurricularActivityGrade(), 1, Integer::sum);
+					if (!ObjectUtils.isEmpty(data.getSportGrade())) {
+						sportGradeCount.merge(data.getSportGrade(), 1, Integer::sum);
+					}
+					if (!ObjectUtils.isEmpty(data.getExtracurricularActivityGrade())) {
+						extracurricularGradeCount.merge(data.getExtracurricularActivityGrade(), 1, Integer::sum);
+					}
 				}
 			}
 			GradingScale mostFrequentSportGrade = getMostFrequentGrade(sportGradeCount);
