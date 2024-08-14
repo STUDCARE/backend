@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,15 +59,25 @@ public class HostelMasterService {
 		HttpResponseData httpResponseData = new HttpResponseData();
 		try {
 			User hostelMaster = userRepository.findByEmail(hostelMasterEmail).orElseThrow(() -> new StudCareValidationException("Hostel Master not found"));
-			Ward ward = wardRepository.findByHostelMaster(hostelMaster).orElseThrow(() -> new StudCareValidationException("Ward not found for this Hostel Master"));
-			List<Student> students = studentRepository.findByWard(ward);
-			WardDetailsDTO wardDetailsDTO = new WardDetailsDTO();
-			wardDetailsDTO.setWardDTO(wardAdapter.adapt(ward));
-			wardDetailsDTO.setStudents(students.stream().map(studentAdapter::adapt).collect(Collectors.toList()));
+			List<Ward> wards = wardRepository.findByHostelMaster(hostelMaster);
+			if (wards.isEmpty()) {
+				throw new StudCareValidationException("No wards found for this Hostel Master");
+			}
+
+			// Create a list to hold ward details
+			List<WardDetailsDTO> wardDetailsDTOList = new ArrayList<>();
+
+			for (Ward ward : wards) {
+				List<Student> students = studentRepository.findByWard(ward);
+				WardDetailsDTO wardDetailsDTO = new WardDetailsDTO();
+				wardDetailsDTO.setWardDTO(wardAdapter.adapt(ward));
+				wardDetailsDTO.setStudents(students.stream().map(studentAdapter::adapt).collect(Collectors.toList()));
+				wardDetailsDTOList.add(wardDetailsDTO);
+			}
 			ResponseDTO responseDTO = new ResponseDTO();
 			responseDTO.setResponseCode(Status.SUCCESS);
 			responseDTO.setMessage("Ward details retrieved successfully");
-			responseDTO.setData(Collections.singletonList(wardDetailsDTO));
+			responseDTO.setData(wardDetailsDTOList);
 			httpResponseData = responseAdapter.adapt(responseDTO);
 			responseEntity = createResponseEntity(httpResponseData);
 		} catch (StudCareValidationException exception) {
